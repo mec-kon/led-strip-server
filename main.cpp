@@ -1,14 +1,11 @@
 #include <iostream>
-#include "server.h"
+#include "http.h"
 
 int main()
 {
+    http http1;
 
-    server s;
-
-    s.create_server();
-    s.receive_data();
-    s.detach();
+    http1.do_GET();
 
     return 0;
 }

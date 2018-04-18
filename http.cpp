@@ -5,13 +5,15 @@ http::http() {
 }
 
 void http::do_GET() {
-    while(true){
+    while (true) {
         string request = server_s.receive_data();
         send_response(request);
+
+        server_s.close_connection();
     }
 }
 
-void http::do_POST(){
+void http::do_POST() {
 
 }
 
@@ -20,26 +22,27 @@ void http::send_response(string request) {
     string fileending = file_f.get_fileending(filename);
     string message = file_f.open_file(filename);
     string content_type;
+    string response;
 
-    if(message != "file not found"){
+    if (message != "file not found") {
         if (fileending == "html") {
             content_type = "text/html";
         } else if (fileending == "json") {
             content_type = "application/json";
         }
 
-        string response = create_header(message, content_type) + message;
+        response = create_header(message, content_type, "HTTP/1.1 200 OK") + message;
 
-        server_s.send_data(response);
     } else {
-
+        response = create_header(message, content_type, "HTTP/1.1 404 NOT Found") + message;
     }
+    server_s.send_data(response);
 
 }
 
-string http::create_header(string message, string content_type) {
+string http::create_header(string message, string content_type, string status_code) {
 
-    string header_text = "HTTP/1.1 200 OK\nContent-Type: "
+    string header_text = status_code + "\nContent-Type: "
                          + content_type + "; charset=UTF-8\n"
                                           "Content-Encoding: UTF-8\nContent-Length: " +
                          to_string(message.length()) +

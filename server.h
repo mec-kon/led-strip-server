@@ -19,6 +19,7 @@ public:
     string receive_data();
     void send_data(string message);
     void detach();
+    void close_connection();
 
 private:
 

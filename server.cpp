@@ -43,3 +43,7 @@ void server::detach() {
     close(socket_s);
     close(connection_c);
 }
+
+void server::close_connection(){
+    close(connection_c);
+}

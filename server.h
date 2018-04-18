@@ -10,9 +10,10 @@
 
 
 #define PORT 10000
+#define FILE_PATH "../"
 #define MAX_PACKET_SIZE 4096
 #define MAX_POSSIBLE_CONNECTIONS 5
-#define WELCOME_MESSAGE "welcome on this server"
+
 #define CREATION_ERROR_MESSAGE "error! could not create socket"
 
 
@@ -22,13 +23,20 @@ class server {
 
 public:
 
-    int socket_s;
-    int connection_c;
-
     void create_server();
     void receive_data();
-    void send_data();
+    void send_data(string message);
     void detach();
+
+private:
+
+    int socket_s;
+    int connection_c;
+    string create_header(string message, string content_type);
+    string open_file(string filename);
+    void send_response(string request);
+    string get_filename(string request);
+    string get_fileending(string filename);
 
 };
 

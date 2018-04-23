@@ -7,14 +7,27 @@ http::http() {
 void http::do_GET() {
     while (true) {
         string request = server_s.receive_data();
-        send_response(request);
+        string firstWord = request.substr(0, request.find(" "));
+        if(firstWord == "POST") {
+            do_POST(request);
+        } else if(firstWord == "GET") {
+            send_response(request);
+        }
 
         server_s.close_connection();
     }
 }
 
-void http::do_POST() {
+void http::do_POST(string post) {
+    string filename = file_f.get_filename(post);
+    string fileending = file_f.get_fileending(filename);
+    string content = post.substr(post.find("\x0D\x0A\x0D\x0A")) + "\n\0";
+    string message = file_f.write_file(filename, content);
+    string content_type = "";
 
+    string response = create_header(message, content_type, "HTTP/1.1 201 OK");
+
+    server_s.send_data(response);
 }
 
 void http::send_response(string request) {

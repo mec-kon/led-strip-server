@@ -11,7 +11,7 @@ class http {
 public:
     http();
     void do_GET();
-    void do_POST();
+    void do_POST(string post);
 
 private:
     server server_s;

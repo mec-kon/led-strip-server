@@ -5,7 +5,7 @@ int main()
 {
     http http1;
 
-    http1.do_GET();
+    http1.RUN();
 
     return 0;
 }

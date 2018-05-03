@@ -10,15 +10,15 @@ using namespace std;
 class http {
 public:
     http();
-    void do_GET();
-    void do_POST();
+    void RUN();
 
 private:
     server server_s;
     file file_f;
 
     string create_header(string message, string content_type, string status_code);
-    void send_response(string request);
+    void handle_request(string request, string mode);
+    string get_request_mode(string request);
 
 };
 

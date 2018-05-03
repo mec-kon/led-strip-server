@@ -1,0 +1,2 @@
+
+THIS is a sample TEXT with numbers: 1, 2, 4, 8, 16

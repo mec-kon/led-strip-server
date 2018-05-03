@@ -30,11 +30,11 @@ string file::open_file(string filename) {
         filename = "index.html";
     }
 
-    if (file_exists(FILE_PATH + filename)) {
+    if (file_exists(STATIC_PATH + filename)) {
         string temporary_data;
         string data;
         ifstream infile;
-        infile.open(FILE_PATH + filename);
+        infile.open(STATIC_PATH + filename);
 
         getline(infile, temporary_data);
         data = temporary_data;
@@ -47,5 +47,28 @@ string file::open_file(string filename) {
     } else {
         return "file not found";
     }
+
+
+}
+
+string file::write_file(string filename, string content) {
+
+    if(filename == ""){
+        filename = "index.html";
+    }
+    else {
+        string data;
+        if (file_exists(FILES_PATH + filename))
+            data = "Added to existing file";
+        else
+            data = "Created new file";
+
+        fstream infile;
+        infile.open(FILES_PATH + filename, std::fstream::in | std::fstream::out | std::fstream::app);
+        infile << content;
+        infile.close();
+        return "OK";
+    }
+
 
 }

@@ -10,6 +10,7 @@ class file {
 
 public:
     string open_file(string filename);
+    string write_file(string filename, string content);
     string get_filename(string request);
     string get_fileending(string filename);
 

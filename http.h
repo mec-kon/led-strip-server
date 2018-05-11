@@ -19,7 +19,7 @@ private:
     string create_header(string message, string content_type, string status_code);
     void handle_request(string request, string mode);
     string get_request_mode(string request);
-
+    string get_content_type(string file_ending);
 };
 
 

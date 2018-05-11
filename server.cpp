@@ -44,6 +44,6 @@ void server::detach() {
     close(connection_c);
 }
 
-void server::close_connection(){
+void server::close_connection() {
     close(connection_c);
 }

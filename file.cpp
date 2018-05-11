@@ -10,6 +10,10 @@ string file::get_filename(string request) {
     //remove first char
     filename.erase(0, 1);
 
+    if (filename == "") {
+        filename = "index.html";
+    }
+
     return filename;
 }
 
@@ -26,7 +30,7 @@ bool file::file_exists(string filename) {
 
 string file::open_file(string filename) {
 
-    if(filename == ""){
+    if (filename == "") {
         filename = "index.html";
     }
 
@@ -44,7 +48,8 @@ string file::open_file(string filename) {
         }
         infile.close();
         return data;
-    } else {
+    }
+    else {
         return "file not found";
     }
 
@@ -53,7 +58,7 @@ string file::open_file(string filename) {
 
 string file::write_file(string filename, string content) {
 
-    if(filename == ""){
+    if (filename == "") {
         filename = "index.html";
     }
     else {

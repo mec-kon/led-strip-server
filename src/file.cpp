@@ -17,7 +17,7 @@ string file::get_filename(string request) {
     return filename;
 }
 
-string file::get_fileending(string filename) {
+string file::get_file_ending(string filename) {
     char delim = '.';
     filename.erase(0, filename.find(delim) + 1);
     return filename;

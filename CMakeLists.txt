@@ -1,7 +1,7 @@
-cmake_minimum_required(VERSION 3.10)
+cmake_minimum_required(VERSION 3.5.1)
 project(http_server)
 
-set(CMAKE_CXX_STANDARD 17)
+set(CMAKE_CXX_STANDARD 14)
 
 file(GLOB_RECURSE SRC_C_FILES ${PROJECT_SOURCE_DIR}/src/*.c)
 file(GLOB_RECURSE SRC_CXX_FILES ${PROJECT_SOURCE_DIR}/src/*.cpp)

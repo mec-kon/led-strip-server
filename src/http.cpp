@@ -17,7 +17,7 @@ void http::RUN() {
 
 void http::handle_request(string request, string mode) {
     string filename = file_f.get_filename(request);
-    string file_ending = file_f.get_fileending(filename);
+    string file_ending = file_f.get_file_ending(filename);
     string response;
 
     if (mode == "POST" && !filename.empty()) {

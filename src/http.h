@@ -7,6 +7,12 @@
 #include "file.h"
 
 using namespace std;
+
+/**
+ * @class http
+ *
+ *This class is responsible for processing HTTP requests and sending HTTP requests.
+ */
 class http {
 public:
     http();

@@ -1,6 +1,11 @@
 #ifndef HTTP_SERVER_DEFINES_H
 #define HTTP_SERVER_DEFINES_H
 
+/**
+ * @file defines.h
+ *
+ * This file contains all parameters that can be configured
+ */
 #define PORT 9999
 #define STATIC_PATH "../static/"
 #define FILES_PATH "../files/"

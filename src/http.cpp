@@ -1,9 +1,25 @@
 #include "http.h"
 
+/**
+ * @brief constructor
+ *
+ * This is the constructor of the http class.
+ * Here, the object server_s is initially configured using the method create_server.
+ *
+ * @return void
+ */
 http::http() {
     server_s.create_server();
 }
 
+/**
+ * @brief main method for handling requests
+ *
+ * In this method, requests are processed in an endless loop.
+ *
+ * @return void
+ *
+ */
 void http::RUN() {
     while (true) {
         string request = server_s.receive_data();
@@ -15,6 +31,19 @@ void http::RUN() {
     }
 }
 
+/**
+ * @brief method for processing requests from the RUN function
+ *
+ * This method processes the requests received in the RUN method.
+ * It is checked whether it is an HTTP-GET or HTTP-POST.
+ * With a POST the content is written to a file, with a GET the requested file is read.
+ * A suitable header is then created for an answer.
+ *
+ * @param request
+ * @param mode
+ *
+ * @return void
+ */
 void http::handle_request(string request, string mode) {
     string filename = file_f.get_filename(request);
     string file_ending = file_f.get_file_ending(filename);
@@ -50,104 +79,129 @@ void http::handle_request(string request, string mode) {
     server_s.send_data(response);
 }
 
+/**
+ * @brief method to create a HTTP-Header
+ *
+ * @param message
+ * @param content_type
+ * @param status_code
+ * @return header_text
+ *
+ */
 string http::create_header(string message, string content_type, string status_code) {
 
     string header_text = status_code + "\nContent-Type: "
                          + content_type + "; charset=UTF-8\n"
                                           "Content-Encoding: UTF-8\nContent-Length: " +
                          to_string(message.length()) +
-                         "\nServer: C++Server/1.0 (Linux)\n\n";
+                         "\nServer: mec-kon's C++Server/1.0 (Linux)\n\n";
 
     return header_text;
 }
 
+/**
+ * @brief method to separate the ending of a given string
+ *
+ * This method separates the ending after a dot from a given string.
+ *
+ * @param request
+ * @return mode
+ */
 string http::get_request_mode(string request) {
     string mode = request.substr(0, request.find(" "));
     return mode;
 }
 
+/**
+ * @brief method for creating a matching content type for asked file
+ *
+ * This method returns a matching string for the HTTP header of the response for a given file extension.
+ *
+ * @param file_ending
+ * @return content_type
+ */
 string http::get_content_type(string file_ending) {
 
-    string mime_type = "text/plain";
+    string content_type = "text/plain";
 
     switch (file_ending[0]) {
         case 'b':
             if (file_ending == "bmp")
-                mime_type = "image/bmp";
+                content_type = "image/bmp";
             if (file_ending == "bin")
-                mime_type = "application/octet-stream";
+                content_type = "application/octet-stream";
 
             break;
         case 'c':
             if (file_ending == "csh")
-                mime_type = "application/csh";
+                content_type = "application/csh";
             if (file_ending == "css")
-                mime_type = "text/css";
+                content_type = "text/css";
 
             break;
         case 'd':
             if (file_ending == "doc")
-                mime_type = "application/msword";
+                content_type = "application/msword";
             if (file_ending == "dtd")
-                mime_type = "application/xml-dtd";
+                content_type = "application/xml-dtd";
             break;
         case 'e':
             if (file_ending == "exe")
-                mime_type = "application/octet-stream";
+                content_type = "application/octet-stream";
             break;
         case 'h':
             if (file_ending == "html" || file_ending == "htm")
-                mime_type = "text/html";
+                content_type = "text/html";
             break;
         case 'i':
             if (file_ending == "ico")
-                mime_type = "image/x-icon";
+                content_type = "image/x-icon";
             break;
         case 'g':
             if (file_ending == "gif")
-                mime_type = "image/gif";
+                content_type = "image/gif";
             break;
         case 'j':
             if (file_ending == "jpeg" || file_ending == "jpg")
-                mime_type = "image/jpeg";
+                content_type = "image/jpeg";
             break;
         case 'l':
             if (file_ending == "latex")
-                mime_type = "application/x-latex";
+                content_type = "application/x-latex";
             break;
         case 'p':
             if (file_ending == "png")
-                mime_type = "image/png";
+                content_type = "image/png";
             if (file_ending == "pgm")
-                mime_type = "image/x-portable-graymap";
+                content_type = "image/x-portable-graymap";
             break;
         case 'r':
             if (file_ending == "rtf")
-                mime_type = "text/rtf";
+                content_type = "text/rtf";
             break;
         case 's':
             if (file_ending == "svg")
-                mime_type = "image/svg+xml";
+                content_type = "image/svg+xml";
             if (file_ending == "sh")
-                mime_type = "application/x-sh";
+                content_type = "application/x-sh";
             break;
         case 't':
             if (file_ending == "tar")
-                mime_type = "application/x-tar";
+                content_type = "application/x-tar";
             if (file_ending == "tex")
-                mime_type = "application/x-tex";
+                content_type = "application/x-tex";
             if (file_ending == "tif" || file_ending == "tiff")
-                mime_type = "image/tiff";
+                content_type = "image/tiff";
             if (file_ending == "txt")
-                mime_type = "text/plain";
+                content_type = "text/plain";
             break;
         case 'x':
             if (file_ending == "xml")
-                mime_type = "application/xml";
+                content_type = "application/xml";
             break;
         default:
             break;
     }
 
-    return mime_type;
+    return content_type;
 }

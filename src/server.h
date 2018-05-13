@@ -11,6 +11,12 @@
 
 using namespace std;
 
+/**
+ * @class server
+ *
+ * This class is responsible for the TCP connection over a socket.
+ * An object of this class is used in the class http.
+ */
 class server {
 
 public:

@@ -24,7 +24,7 @@ string file::get_file_ending(string filename) {
 }
 
 bool file::file_exists(string filename) {
-    ifstream file_f(filename);
+    ifstream file_f(filename.c_str());
     return (bool) file_f;
 }
 
@@ -38,7 +38,8 @@ string file::open_file(string filename) {
         string temporary_data;
         string data;
         ifstream infile;
-        infile.open(STATIC_PATH + filename);
+        string path = STATIC_PATH + filename;
+        infile.open(path.c_str());
 
         getline(infile, temporary_data);
         data = temporary_data;
@@ -69,7 +70,8 @@ string file::write_file(string filename, string content) {
             data = "Created new file";
 
         fstream infile;
-        infile.open(FILES_PATH + filename, std::fstream::in | std::fstream::out | std::fstream::app);
+        string path = FILES_PATH + filename;
+        infile.open(path.c_str(), std::fstream::in | std::fstream::out | std::fstream::app);
         infile << content;
         infile.close();
         return "OK";

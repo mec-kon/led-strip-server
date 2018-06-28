@@ -164,6 +164,8 @@ string http::get_content_type(string file_ending) {
         case 'j':
             if (file_ending == "jpeg" || file_ending == "jpg")
                 content_type = "image/jpeg";
+            if (file_ending == "js")
+                content_type = "text/javascript";
             break;
         case 'l':
             if (file_ending == "latex")

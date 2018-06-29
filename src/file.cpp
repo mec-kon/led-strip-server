@@ -35,18 +35,13 @@ string file::open_file(string filename) {
     }
 
     if (file_exists(STATIC_PATH + filename)) {
-        string temporary_data;
         string data;
         ifstream infile;
         string path = STATIC_PATH + filename;
         infile.open(path.c_str());
 
-        getline(infile, temporary_data);
-        data = temporary_data;
-        while (infile) {
-            getline(infile, temporary_data);
-            data = data + temporary_data;
-        }
+        data.assign((std::istreambuf_iterator<char>(infile)), (std::istreambuf_iterator<char>()));
+
         infile.close();
         return data;
     }

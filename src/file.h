@@ -6,8 +6,13 @@
 #include "defines.h"
 
 using namespace std;
-class file {
 
+/**
+ * @class file
+ *
+ * This class takes care of reading from and writing to files.
+ */
+class file {
 public:
     string open_file(string filename);
     string write_file(string filename, string content);

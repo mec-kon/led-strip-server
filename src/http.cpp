@@ -39,8 +39,8 @@ void http::RUN() {
  * With a POST the content is written to a file, with a GET the requested file is read.
  * A suitable header is then created for an answer.
  *
- * @param request
- * @param mode
+ * @param request (In this variable, the HTTP request is passed to the method.)
+ * @param mode (This variable determines whether it is an HTTP GET or an HTTP POST.)
  *
  * @return void
  */
@@ -53,8 +53,9 @@ void http::handle_request(string request, string mode) {
         string content = request.substr(request.find("\x0D\x0A\x0D\x0A")) + "\n\0";
         string message = file_f.write_file(filename, content);
         string content_type = "text/plain";
-        response = create_header(message, content_type, "HTTP/1.1 200 OK");
+        response = create_header(message.length(), content_type, "HTTP/1.1 200 OK");
 
+        cout << "posted to file " << filename << endl;
     }
     else if (mode == "GET") {
         string message = file_f.open_file(filename);
@@ -64,16 +65,16 @@ void http::handle_request(string request, string mode) {
 
             content_type = get_content_type(file_ending);
 
-            response = create_header(message, content_type, "HTTP/1.1 200 OK") + message;
+            response = create_header(message.length(), content_type, "HTTP/1.1 200 OK") + message;
 
         }
         else {
-            response = create_header(message, content_type, "HTTP/1.1 404 NOT Found") + message;
+            response = create_header(message.length(), content_type, "HTTP/1.1 404 NOT Found") + message;
         }
-
+        cout << "received HTTP GET" << endl;
     }
     else {
-        response = create_header("", "text/html", "HTTP/1.1 404 NOT Found");
+        response = create_header(0, "text/html", "HTTP/1.1 404 NOT Found");
     }
 
     server_s.send_data(response);
@@ -82,18 +83,18 @@ void http::handle_request(string request, string mode) {
 /**
  * @brief method to create a HTTP-Header
  *
- * @param message
+ * @param message_length (The length of the content is stored in this variable.)
  * @param content_type
  * @param status_code
- * @return header_text
+ * @return header_text (The text of the header as string.)
  *
  */
-string http::create_header(string message, string content_type, string status_code) {
+string http::create_header(int message_length, string content_type, string status_code) {
 
     string header_text = status_code + "\nContent-Type: "
                          + content_type + "; charset=UTF-8\n"
                                           "Content-Encoding: UTF-8\nContent-Length: " +
-                         to_string(message.length()) +
+                         to_string(message_length) +
                          "\nServer: mec-kon's C++Server/1.0 (Linux)\n\n";
 
     return header_text;

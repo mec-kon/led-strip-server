@@ -105,9 +105,10 @@ string file::write_file(string filename, string content) {
     else
         data = "Created new file";
 
-    ofstream out(filename);
-    out << content;
-    out.close();
+    ofstream outfile;
+    outfile.open(FILES_PATH + filename);
+    outfile << content;
+    outfile.close();
 
     return data;
 }

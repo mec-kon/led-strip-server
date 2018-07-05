@@ -50,12 +50,13 @@ void http::handle_request(string request, string mode) {
     string response;
 
     if (mode == "POST" && !filename.empty()) {
-        string content = request.substr(request.find("\x0D\x0A\x0D\x0A")) + "\n\0";
+        string content = get_content(request, file_ending);
         string message = file_f.write_file(filename, content);
         string content_type = "text/plain";
-        response = create_header(message.length(), content_type, "HTTP/1.1 200 OK");
+        response = create_header(message.length(), content_type, "HTTP/1.1 200 OK") + message;
 
-        cout << "posted to file " << filename << endl;
+        cout << "posted to file : " << filename << ", message : " << message << endl;
+        cout << content <<  endl;
     }
     else if (mode == "GET") {
         string message = file_f.open_file(filename);
@@ -99,6 +100,14 @@ string http::create_header(int message_length, string content_type, string statu
 
     return header_text;
 }
+
+string http::get_content(string request, string file_ending){
+
+    string content = request.substr(request.find_last_of("\r\n\r\n"));
+
+    return content;
+}
+
 
 /**
  * @brief method to separate the ending of a given string

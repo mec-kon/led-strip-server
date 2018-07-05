@@ -23,7 +23,8 @@ private:
     file file_f;
 
     string create_header(int message_length, string content_type, string status_code);
-    string get_content(string request, string file_ending);
+    string get_content(string request, int content_length);
+    int get_content_length(string request);
     void handle_request(string request, string mode);
     string get_request_mode(string request);
     string get_content_type(string file_ending);

@@ -3,7 +3,7 @@
 
 #include <string>
 #include <fstream>
-#include "defines.h"
+#include "../defines.h"
 
 using namespace std;
 

@@ -1,3 +1,4 @@
+#include <thread>
 #include "http.h"
 
 /**
@@ -20,14 +21,27 @@ http::http() {
  * @return void
  *
  */
-void http::RUN() {
+void http::RUN(mutex *network_connection, string *message, bool *new_message) {
     while (true) {
+        network_connection->lock();
+
+        *message = "";
         string request = server_s.receive_data();
         string mode = get_request_mode(request);
 
-        handle_request(request, mode);
+        *message = handle_request(request, mode);
+
+        if(*message != ""){
+            *new_message = true;
+            cout << "recieved message" << endl;
+        }
+        else{
+            *new_message = false;
+        }
 
         server_s.close_connection();
+
+        network_connection->unlock();
     }
 }
 
@@ -44,14 +58,15 @@ void http::RUN() {
  *
  * @return void
  */
-void http::handle_request(string request, string mode) {
+string http::handle_request(string request, string mode) {
     string filename = file_f.get_filename(request);
     string file_ending = file_f.get_file_ending(filename);
     string response;
+    string content = "";
 
     if (mode == "POST" && !filename.empty()) {
         int content_len = get_content_length(request);
-        string content = get_content(request, content_len);
+        content = get_content(request, content_len);
         string message = file_f.write_file(filename, content);
         string content_type = "text/plain";
         response = create_header(message.length(), content_type, "HTTP/1.1 200 OK") + message;
@@ -79,6 +94,8 @@ void http::handle_request(string request, string mode) {
     }
 
     server_s.send_data(response);
+
+    return content;
 }
 
 /**

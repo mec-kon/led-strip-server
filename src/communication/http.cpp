@@ -1,4 +1,3 @@
-#include <thread>
 #include "http.h"
 
 /**
@@ -21,27 +20,35 @@ http::http() {
  * @return void
  *
  */
-void http::RUN(mutex *network_connection, string *message, bool *new_message) {
+void http::RUN(sem_t *network_connection_access, sem_t *network_connection_read, sem_t *network_connection_write , string *message) {
     while (true) {
-        network_connection->lock();
-
-        *message = "";
         string request = server_s.receive_data();
         string mode = get_request_mode(request);
+        string data = handle_request(request, mode);
+        bool new_message;
 
-        *message = handle_request(request, mode);
+        if(data != ""){
+            new_message = true;
 
-        if(*message != ""){
-            *new_message = true;
-            cout << "recieved message" << endl;
+            sem_wait(network_connection_write);
+            sem_wait(network_connection_access);
+
+
+            *message = data;
+
+            cout << "received data in thread 1 : " << *message << endl;
         }
         else{
-            *new_message = false;
+            new_message = false;
         }
 
         server_s.close_connection();
 
-        network_connection->unlock();
+        if(new_message){
+            sem_post(network_connection_access);
+            sem_post(network_connection_read);
+        }
+
     }
 }
 
@@ -71,7 +78,6 @@ string http::handle_request(string request, string mode) {
         string content_type = "text/plain";
         response = create_header(message.length(), content_type, "HTTP/1.1 200 OK") + message;
 
-        cout << "posted to file : " << filename << ", message : " << message << endl;
     }
     else if (mode == "GET") {
         string message = file_f.open_file(filename);
@@ -87,7 +93,6 @@ string http::handle_request(string request, string mode) {
         else {
             response = create_header(message.length(), content_type, "HTTP/1.1 404 NOT Found") + message;
         }
-        cout << "received HTTP GET" << endl;
     }
     else {
         response = create_header(0, "text/html", "HTTP/1.1 404 NOT Found");

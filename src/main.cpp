@@ -1,6 +1,6 @@
 #include <iostream>
 #include <thread>
-#include <mutex>
+#include <semaphore.h>
 
 
 #include "communication/http.h"
@@ -12,35 +12,43 @@ using namespace std;
 
 static http http1;
 
-mutex *network_connection;
+sem_t *network_connection_access;
+sem_t *network_connection_read;
+sem_t *network_connection_write;
 
 string *message;
-bool *new_message;
 
 void thread_handler(){
     while(true){
-        network_connection->lock();
+        sem_wait(network_connection_read);
+        sem_wait(network_connection_access);
 
-        if(*new_message == true){
-            cout << "true "<< endl << endl;
-        }
-        else{
-            cout << "false" << endl;
-        }
+        cout << "received data in thread 2 : " << *message << endl;
 
-        network_connection->unlock();
+        sem_post(network_connection_access);
+        sem_post(network_connection_write);
     }
 
 }
 
 void thread_init(){
-    thread network_thread(&http::RUN, &http1, network_connection, message, new_message);
+    thread network_thread(&http::RUN, &http1, network_connection_access, network_connection_read, network_connection_write, message);
     thread administrative_thread(thread_handler);
 
     network_thread.join();
     administrative_thread.join();
 }
 
+void semaphore_init(){
+    network_connection_access = (sem_t *) malloc(sizeof(network_connection_access));
+    sem_init(network_connection_access, 0, 1);
+
+    network_connection_read = (sem_t*) malloc(sizeof(network_connection_read));
+    sem_init(network_connection_read, 0, 0);
+
+    network_connection_write = (sem_t *) malloc(sizeof(network_connection_write));
+    sem_init(network_connection_write, 0, 1);
+}
 
 
 
@@ -55,15 +63,10 @@ void thread_init(){
  */
 int main()
 {
-    network_connection = new mutex();
-
     message = new string();
-    new_message = new bool();
 
-
+    semaphore_init();
     thread_init();
-
-    cout << "end" << endl;
 
     return 0;
 }

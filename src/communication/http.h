@@ -2,7 +2,7 @@
 #define HTTP_SERVER_HTTP_H
 
 #include <iostream>
-#include <mutex>
+#include <semaphore.h>
 
 #include "server.h"
 #include "file.h"
@@ -17,7 +17,7 @@ using namespace std;
 class http {
 public:
     http();
-    void RUN(mutex *network_connection, string *message, bool *new_message);
+    void RUN(sem_t *network_connection_access, sem_t *network_connection_read, sem_t *network_connection_write , string *message);
 
 private:
     server server_s;

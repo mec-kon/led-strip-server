@@ -1,3 +1,4 @@
+#include <iostream>
 #include "file.h"
 
 /**
@@ -15,6 +16,7 @@ string file::get_filename(string request) {
 
     request.erase(0, request.find(delim) + 1);
     filename = request.substr(0, request.find(delim));
+    filename = filename.substr(0, filename.find_first_of('?'));
 
     //remove first char
     filename.erase(0, 1);
@@ -37,7 +39,10 @@ string file::get_filename(string request) {
  */
 string file::get_file_ending(string filename) {
     char delim = '.';
-    filename.erase(0, filename.find(delim) + 1);
+
+    filename = filename.substr(0, filename.find_first_of('?'));
+    filename.erase(0, filename.find_last_of(delim)+1);
+
     return filename;
 }
 

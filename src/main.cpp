@@ -4,13 +4,14 @@
 
 
 #include "communication/http.h"
+#include "led_strip_control/data.h"
+#include "led_strip_control/mode.h"
+#include "gpio_control/gpio.h"
 
-#include "../lib/json.hpp"
-using json = nlohmann::json;
 
 using namespace std;
 
-static http http1;
+http http1;
 
 sem_t *network_connection_access;
 sem_t *network_connection_read;
@@ -24,6 +25,13 @@ void thread_handler(){
         sem_wait(network_connection_access);
 
         cout << "received data in thread 2 : " << *message << endl;
+        
+        data *data1 = new data(message);
+        mode *mode1 = new mode(data1);
+
+        thread color_thread(&mode::start, mode1);
+        color_thread.join();
+
 
         sem_post(network_connection_access);
         sem_post(network_connection_write);
@@ -65,6 +73,7 @@ int main()
 {
     message = new string();
 
+    gpio_init();
     semaphore_init();
     thread_init();
 

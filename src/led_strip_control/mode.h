@@ -5,14 +5,14 @@
 #include "../gpio_control/gpio.h"
 
 class mode {
-    data *mode_information;
-
 public:
     mode(data *data1);
     void start();
 
 private:
+    data *mode_information;
     void one_color();
+    void fade();
 
 };
 

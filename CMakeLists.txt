@@ -11,4 +11,4 @@ file(GLOB_RECURSE SRC_CXX_FILES ${PROJECT_SOURCE_DIR}/src/*.cpp ${PROJECT_SOURCE
 file(GLOB_RECURSE SRC_HEADERS ${PROJECT_SOURCE_DIR}/src/*.h ${PROJECT_SOURCE_DIR}/src/*/*.h )
 
 add_executable(${PROJECT_NAME}
-        ${SRC_C_FILES} ${SRC_CXX_FILES} ${SRC_HEADERS})
+        ${SRC_C_FILES} ${SRC_CXX_FILES} ${SRC_HEADERS} src/led_strip_control/color.cpp src/led_strip_control/color.h)

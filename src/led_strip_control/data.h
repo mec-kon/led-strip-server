@@ -1,8 +1,9 @@
-#ifndef HTTP_SERVER_COLOR_H
-#define HTTP_SERVER_COLOR_H
+#ifndef HTTP_SERVER_DATA_H
+#define HTTP_SERVER_DATA_H
 
 #include <string>
 #include "../../lib/json.hpp"
+#include "color.h"
 using json = nlohmann::json;
 using namespace std;
 
@@ -11,16 +12,13 @@ public:
 
     data(string *message);
 
-    struct colors {
-        int red;
-        int green;
-        int blue;
-    } color;
+    color color_array[5];
 
     int time;
     int mode;
+    int number_of_colors;
 
 };
 
 
-#endif //HTTP_SERVER_COLOR_H
+#endif //HTTP_SERVER_DATA_H

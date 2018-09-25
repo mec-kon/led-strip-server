@@ -17,21 +17,31 @@ sem_t *network_connection_access;
 sem_t *network_connection_read;
 sem_t *network_connection_write;
 
+sem_t *thread_end;
+
 string *message;
 
-void thread_handler(){
-    while(true){
+void thread_handler() {
+    mode *mode1;
+    thread color_thread;
+    int *mode_is_running =new int(0);
+
+    while (true) {
         sem_wait(network_connection_read);
         sem_wait(network_connection_access);
-
         cout << "received data in thread 2 : " << *message << endl;
-        
-        data *data1 = new data(message);
-        mode *mode1 = new mode(data1);
 
-        thread color_thread(&mode::start, mode1);
-        color_thread.join();
 
+        *mode_is_running = 0;
+
+        sem_wait(thread_end);
+        data data1(message);
+        delete mode1;
+        *mode_is_running = 1;
+        mode1 = new mode(&data1, mode_is_running);
+        sem_post(thread_end);
+        color_thread = thread(&mode::start, mode1, thread_end);
+        color_thread.detach();
 
         sem_post(network_connection_access);
         sem_post(network_connection_write);
@@ -39,25 +49,28 @@ void thread_handler(){
 
 }
 
-void thread_init(){
-    thread network_thread(&http::RUN, &http1, network_connection_access, network_connection_read, network_connection_write, message);
+void thread_init() {
+    thread network_thread(&http::RUN, &http1, network_connection_access, network_connection_read,
+                          network_connection_write, message);
     thread administrative_thread(thread_handler);
 
     network_thread.join();
     administrative_thread.join();
 }
 
-void semaphore_init(){
+void semaphore_init() {
     network_connection_access = (sem_t *) malloc(sizeof(network_connection_access));
     sem_init(network_connection_access, 0, 1);
 
-    network_connection_read = (sem_t*) malloc(sizeof(network_connection_read));
+    network_connection_read = (sem_t *) malloc(sizeof(network_connection_read));
     sem_init(network_connection_read, 0, 0);
 
     network_connection_write = (sem_t *) malloc(sizeof(network_connection_write));
     sem_init(network_connection_write, 0, 1);
-}
 
+    thread_end = (sem_t *) malloc(sizeof(thread_end));
+    sem_init(thread_end, 0, 1);
+}
 
 
 /**
@@ -69,8 +82,7 @@ void semaphore_init(){
  *
  * @return 0
  */
-int main()
-{
+int main() {
     message = new string();
 
     gpio_init();

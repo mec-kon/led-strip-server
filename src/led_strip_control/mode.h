@@ -6,12 +6,16 @@
 
 class mode {
 public:
-    mode(data *data1);
-    void start();
+    mode(data *data1, int *mode_is_r);
+
+    void start(sem_t *thread_end);
 
 private:
+    int *mode_is_running;
     data *mode_information;
+
     void one_color();
+
     void fade();
 
 };

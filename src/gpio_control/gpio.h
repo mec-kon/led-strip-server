@@ -5,6 +5,8 @@
 
 #include "../defines.h"
 
+#define GPIO "gpio.cpp : "
+
 using namespace std;
 
 #ifdef __arm__

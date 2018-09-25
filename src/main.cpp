@@ -8,6 +8,7 @@
 #include "led_strip_control/mode.h"
 #include "gpio_control/gpio.h"
 
+#define Filename "main.cpp : "
 
 using namespace std;
 
@@ -29,8 +30,8 @@ void thread_handler() {
     while (true) {
         sem_wait(network_connection_read);
         sem_wait(network_connection_access);
-        cout << "received data in thread 2 : " << *message << endl;
 
+        cout << Filename << "data received in thread_handler()" << endl;
 
         *mode_is_running = 0;
 
@@ -43,6 +44,8 @@ void thread_handler() {
         color_thread = thread(&mode::start, mode1, thread_end);
         color_thread.detach();
 
+        cout << Filename << "color_thread created in thread_handler()" << endl;
+
         sem_post(network_connection_access);
         sem_post(network_connection_write);
     }
@@ -50,13 +53,15 @@ void thread_handler() {
 }
 
 void thread_init() {
+    cout << Filename << "initializing threads in thread_init()" << endl;
+
     thread network_thread(&http::RUN, &http1, network_connection_access, network_connection_read,
                           network_connection_write, message);
     thread administrative_thread(thread_handler);
-
     network_thread.join();
     administrative_thread.join();
-}
+
+   }
 
 void semaphore_init() {
     network_connection_access = (sem_t *) malloc(sizeof(network_connection_access));
@@ -70,6 +75,8 @@ void semaphore_init() {
 
     thread_end = (sem_t *) malloc(sizeof(thread_end));
     sem_init(thread_end, 0, 1);
+
+    cout << Filename << "semaphores initialized in semaphore_init()" << endl;
 }
 
 

@@ -14,6 +14,8 @@ data::data(string *message) {
     time = 100;
     mode = json1["mode"];
 
+    number_of_colors = 5;
+
     /*
     mode = json1["mode"];
 

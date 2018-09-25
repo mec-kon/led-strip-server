@@ -7,6 +7,8 @@
 #include "server.h"
 #include "file.h"
 
+#define HTTP "http.cpp : "
+
 using namespace std;
 
 /**

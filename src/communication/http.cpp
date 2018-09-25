@@ -36,7 +36,7 @@ void http::RUN(sem_t *network_connection_access, sem_t *network_connection_read,
 
             *message = data;
 
-            cout << "received data in thread 1 : " << *message << endl;
+            cout << HTTP << "data received in run()" << endl;
         }
         else{
             new_message = false;

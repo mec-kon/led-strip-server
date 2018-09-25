@@ -16,7 +16,7 @@ void gpio_init(){
     softPwmCreate (GPIO_BLUE, 0, 64) ;
 #endif
 #ifdef __x86_64__
-    cout << "GPIO init" << endl;
+    cout << GPIO << "GPIO init" << endl;
 #endif
 }
 
@@ -25,6 +25,6 @@ void pwm_write(int gpio, int value){
     softPwmWrite (gpio, value/4);
 #endif
 #ifdef __x86_64__
-    cout << "GPIO : " << gpio << " VALUE : " << value << endl;
+    cout << GPIO << "GPIO : " << gpio << " VALUE : " << value << endl;
 #endif
 }

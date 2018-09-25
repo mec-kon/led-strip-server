@@ -4,6 +4,8 @@
 #include "data.h"
 #include "../gpio_control/gpio.h"
 
+#define MODE "mode.cpp : "
+
 class mode {
 public:
     mode(data *data1, int *mode_is_r);

@@ -5,25 +5,29 @@ data::data(string *message) {
 
     json json1 = json::parse(*message);
 
-    for(int i=0; i<5; i++){
-        color_array[i].red = json1["color_red"][i];
-        color_array[i].green = json1["color_green"][i];
-        color_array[i].blue = json1["color_blue"][i];
+    mode = json1["mode"];
+
+    if (mode == "oneColor") {
+
+
+        int red = json1["color_array"][0]["color_red"];
+        int green = json1["color_array"][0]["color_green"];
+        int blue = json1["color_array"][0]["color_blue"];
+
+        color color1(red, green, blue);
+        color_array[0] = color1;
+
     }
+    else if (mode == "fade") {
+        for (int i = 0; i < ARRAY_SIZE; i++) {
 
-    time = 100;
-    mode = json1["mode"];
+            int red = json1["color_array"][i]["color_red"];
+            int green = json1["color_array"][i]["color_green"];
+            int blue = json1["color_array"][i]["color_blue"];
 
-    number_of_colors = 5;
-
-    /*
-    mode = json1["mode"];
-
-    if(json1["time"] != NULL){
+            color color1(red, green, blue);
+            color_array[i] = color1;
+        }
         time = json1["time"];
     }
-    else{
-        time = 0;
-    }
-     */
 }

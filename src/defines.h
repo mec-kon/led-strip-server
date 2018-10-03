@@ -19,4 +19,6 @@
 #define GPIO_GREEN 3
 #define GPIO_BLUE 4
 
+#define ARRAY_SIZE 6
+
 #endif //HTTP_SERVER_DEFINES_H

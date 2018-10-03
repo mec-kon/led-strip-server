@@ -4,6 +4,7 @@
 #include <string>
 #include "../../lib/json.hpp"
 #include "color.h"
+#include "../defines.h"
 using json = nlohmann::json;
 using namespace std;
 
@@ -12,11 +13,10 @@ public:
 
     data(string *message);
 
-    color color_array[5];
+    color color_array[ARRAY_SIZE];
 
     int time;
-    int mode;
-    int number_of_colors;
+    string mode;
 
 };
 

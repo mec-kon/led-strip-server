@@ -5,6 +5,7 @@
 class color {
 public:
     color();
+    color(int r, int g, int b);
     bool operator==(const color &color2) const;
     bool operator!=(const color &color2) const;
 

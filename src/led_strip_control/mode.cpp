@@ -45,7 +45,7 @@ void mode::fade() {
 
 
         if (i == ARRAY_SIZE - 1) {
-            color1 = mode_information->color_array[4];
+            color1 = mode_information->color_array[ARRAY_SIZE-1];
             color2 = mode_information->color_array[0];
             i++;
         }
@@ -58,6 +58,11 @@ void mode::fade() {
             i++;
         }
         while (color1.red != color2.red || color1.blue != color2.blue || color1.green != color2.green) {
+            if(!(*mode_is_running)){
+                break;
+            }
+
+
             if (color1.red > color2.red) {
                 color1.red--;
             }

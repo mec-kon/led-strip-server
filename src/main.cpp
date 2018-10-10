@@ -22,10 +22,15 @@ sem_t *thread_end;
 
 string *message;
 
+/**
+ * @brief method to process data
+ * Received data is processed in this method.
+ * When a new string is received, this method starts a new thread that executes the sent mode.
+ */
 void thread_handler() {
     mode *mode1;
     thread color_thread;
-    int *mode_is_running =new int(0);
+    int *mode_is_running = new int(0);
 
     while (true) {
         sem_wait(network_connection_read);
@@ -52,6 +57,13 @@ void thread_handler() {
 
 }
 
+/**
+ * @brief method to initialize two used threads
+ * One of the two threads takes care of the network connection,
+ * the other thread takes care of processing the received data.
+ *
+ * @return void
+ */
 void thread_init() {
     cout << Filename << "initializing threads in thread_init()" << endl;
 
@@ -61,8 +73,18 @@ void thread_init() {
     network_thread.join();
     administrative_thread.join();
 
-   }
+}
 
+/**
+ * @brief method to initialize all used semaphores
+ *
+ * In this method, four semaphores are initialized.
+ * The first three are to solve the producer-consumer problem.
+ * The fourth semaphore ensures that the thread_handler
+ * method waits with the processing of new data until the old led mode is terminated.
+ *
+ * @return void
+ */
 void semaphore_init() {
     network_connection_access = (sem_t *) malloc(sizeof(network_connection_access));
     sem_init(network_connection_access, 0, 1);

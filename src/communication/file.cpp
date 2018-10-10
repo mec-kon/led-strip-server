@@ -88,32 +88,3 @@ string file::open_file(string filename) {
 
 
 }
-
-/**
- * @brief method to write a string to a file
- *
- * This method saves a string in a file.
- *
- * @param filename
- * @param content
- * @return data
- */
-string file::write_file(string filename, string content) {
-
-    string data;
-
-    if (filename == "") {
-        filename = "index.html";
-    }
-    if (file_exists(FILES_PATH + filename))
-        data = "Added to existing file";
-    else
-        data = "Created new file";
-
-    ofstream outfile;
-    outfile.open(FILES_PATH + filename);
-    outfile << content;
-    outfile.close();
-
-    return data;
-}

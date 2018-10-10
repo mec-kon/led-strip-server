@@ -74,7 +74,7 @@ string http::handle_request(string request, string mode) {
     if (mode == "POST" && !filename.empty()) {
         int content_len = get_content_length(request);
         content = get_content(request, content_len);
-        string message = file_f.write_file(filename, content);
+        string message = "data received";
         string content_type = "text/plain";
         response = create_header(message.length(), content_type, "HTTP/1.1 200 OK") + message;
 

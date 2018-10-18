@@ -28,7 +28,7 @@ string *message;
  * When a new string is received, this method starts a new thread that executes the sent mode.
  */
 void thread_handler() {
-    mode *mode1;
+    mode *mode1 = new mode();
     thread color_thread;
     int *mode_is_running = new int(0);
 

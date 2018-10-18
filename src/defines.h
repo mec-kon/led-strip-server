@@ -15,8 +15,8 @@
 #define CREATION_ERROR_MESSAGE "error! could not create socket"
 
 
-#define GPIO_RED 2
-#define GPIO_GREEN 3
+#define GPIO_RED 3
+#define GPIO_GREEN 2
 #define GPIO_BLUE 4
 
 #define ARRAY_SIZE 6

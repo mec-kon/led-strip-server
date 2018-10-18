@@ -3,6 +3,10 @@
 #include <semaphore.h>
 #include "mode.h"
 
+mode::mode() {
+    mode_information = nullptr;
+    mode_is_running = nullptr;
+}
 mode::mode(data *data1, int *mode_is_r) {
     mode_information = data1;
     mode_is_running = mode_is_r;

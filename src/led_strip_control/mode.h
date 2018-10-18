@@ -8,6 +8,7 @@
 
 class mode {
 public:
+    mode();
     mode(data *data1, int *mode_is_r);
 
     void start(sem_t *thread_end);

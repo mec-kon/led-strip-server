@@ -86,13 +86,13 @@ void thread_init() {
  * @return void
  */
 void semaphore_init() {
-    network_connection_access = (sem_t *) malloc(sizeof(network_connection_access));
+    network_connection_access = (sem_t *) malloc(sizeof(sem_t));
     sem_init(network_connection_access, 0, 1);
 
-    network_connection_read = (sem_t *) malloc(sizeof(network_connection_read));
+    network_connection_read = (sem_t *) malloc(sizeof(sem_t));
     sem_init(network_connection_read, 0, 0);
 
-    network_connection_write = (sem_t *) malloc(sizeof(network_connection_write));
+    network_connection_write = (sem_t *) malloc(sizeof(sem_t));
     sem_init(network_connection_write, 0, 1);
 
     thread_end = (sem_t *) malloc(sizeof(thread_end));

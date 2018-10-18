@@ -1,10 +1,18 @@
 cmake_minimum_required(VERSION 2.8)
 project(http_server)
 
+EXECUTE_PROCESS( COMMAND uname -m COMMAND tr -d '\n' OUTPUT_VARIABLE ARCHITECTURE )
+message( STATUS "detected architecture: ${ARCHITECTURE}" )
+
 set(CMAKE_CXX_STANDARD 14)
 
-# added -pthread
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -pthread")
+if( ${ARCHITECTURE} STREQUAL "x86_64" )
+    # added -pthread
+    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -pthread")
+else()
+    # added -pthread -lwiringPi
+    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -pthread -lwiringPi")
+endif()
 
 file(GLOB_RECURSE SRC_C_FILES ${PROJECT_SOURCE_DIR}/src/*.c)
 file(GLOB_RECURSE SRC_CXX_FILES ${PROJECT_SOURCE_DIR}/src/*.cpp ${PROJECT_SOURCE_DIR}/src/*/*.cpp)

@@ -12,7 +12,6 @@ using namespace std;
 #ifdef __arm__
 #include <wiringPi.h>
 #include <softPwm.h>
-#include "config.h"
 #endif
 
 extern void gpio_init();

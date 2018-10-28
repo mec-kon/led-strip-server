@@ -134,7 +134,7 @@ string http::create_header(int message_length, string content_type, string statu
 
 string http::get_content(string request, int content_length){
 
-    string content = request.substr(request.find_last_of("\r\n\r\n")+1);
+    string content = request.substr(request.find("\r\n\r\n")+4);
     content = content.substr(0, content_length);
 
     return content;

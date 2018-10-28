@@ -74,7 +74,15 @@ string http::handle_request(string request, string mode) {
     if (mode == "POST" && !filename.empty()) {
         int content_len = get_content_length(request);
         content = get_content(request, content_len);
-        string message = "data received";
+
+        string message;
+        if(filename == "colors.json"){
+           message  = "color received";
+        }
+        else {
+            message = file_f.write_file(filename, content);
+        }
+
         string content_type = "text/plain";
         response = create_header(message.length(), content_type, "HTTP/1.1 200 OK") + message;
 
@@ -118,7 +126,8 @@ string http::create_header(int message_length, string content_type, string statu
                          + content_type + "; charset=UTF-8\n"
                                           "Content-Encoding: UTF-8\nContent-Length: " +
                          to_string(message_length) +
-                         "\nServer: mec-kon's C++Server/1.0 (Linux)\n\n";
+                         "\nServer: mec-kon's C++Server/1.0 (Linux)"
+                         "\r\n\r\n";
 
     return header_text;
 }

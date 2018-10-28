@@ -8,7 +8,7 @@
  */
 #define PORT 9999
 #define STATIC_PATH "../static/src/"
-#define FILES_PATH "../files/"
+#define CONFIG_PATH "../config/"
 #define MAX_PACKET_SIZE 4096
 #define MAX_POSSIBLE_CONNECTIONS 5
 

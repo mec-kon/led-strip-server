@@ -71,10 +71,19 @@ string file::open_file(string filename) {
         filename = "index.html";
     }
 
-    if (file_exists(STATIC_PATH + filename)) {
+    string file_path;
+
+    if(filename == "serverConfig.json"){
+        file_path = CONFIG_PATH;
+    }
+    else {
+        file_path = STATIC_PATH;
+    }
+
+    if (file_exists(file_path + filename)) {
         string data;
         ifstream infile;
-        string path = STATIC_PATH + filename;
+        string path = file_path + filename;
         infile.open(path.c_str());
 
         data.assign((std::istreambuf_iterator<char>(infile)), (std::istreambuf_iterator<char>()));
@@ -86,5 +95,33 @@ string file::open_file(string filename) {
         return "file not found";
     }
 
+}
 
+/**
+ * @brief method to write a string to a file
+ *
+ * This method saves a string in a file.
+ *
+ * @param filename
+ * @param content
+ * @return data
+ */
+string file::write_file(string filename, string content) {
+
+    string data;
+
+    if (filename == "") {
+        filename = "index.html";
+    }
+    if (file_exists(CONFIG_PATH + filename))
+        data = "Added to existing file";
+    else
+        data = "Created new file";
+
+    ofstream outfile;
+    outfile.open(CONFIG_PATH + filename);
+    outfile << content;
+    outfile.close();
+
+    return data;
 }

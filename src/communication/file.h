@@ -5,8 +5,6 @@
 #include <fstream>
 #include "../defines.h"
 
-#define FILE "file.cpp : "
-
 using namespace std;
 
 /**
@@ -17,6 +15,7 @@ using namespace std;
 class file {
 public:
     string open_file(string filename);
+    string write_file(string filename, string content);
     string get_filename(string request);
     string get_file_ending(string filename);
 

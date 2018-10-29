@@ -9,10 +9,10 @@
  *
  * @return void
  */
-void server::create_server() {
+void server::create_server(int port) {
     struct sockaddr_in my_addr;
     my_addr.sin_family = AF_INET; //internet ip protocol v4
-    my_addr.sin_port = htons(PORT); //PORT
+    my_addr.sin_port = htons(port); //PORT
     my_addr.sin_addr.s_addr = INADDR_ANY; //network byte order
 
     //create socket

@@ -73,7 +73,7 @@ string file::open_file(string filename) {
 
     string file_path;
 
-    if(filename == "serverConfig.json"){
+    if(filename == "websiteConfig.json"){
         file_path = CONFIG_PATH;
     }
     else {

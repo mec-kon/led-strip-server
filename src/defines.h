@@ -6,7 +6,6 @@
  *
  * This file contains all parameters that can be configured
  */
-#define PORT 9999
 #define STATIC_PATH "../static/src/"
 #define CONFIG_PATH "../config/"
 #define MAX_PACKET_SIZE 4096

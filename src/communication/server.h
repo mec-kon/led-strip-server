@@ -21,7 +21,7 @@ class server {
 
 public:
 
-    void create_server();
+    void create_server(int port);
     string receive_data();
     void send_data(string message);
     void detach();

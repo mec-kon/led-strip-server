@@ -6,10 +6,12 @@
 
 #include "server.h"
 #include "file.h"
+#include "../../lib/json.hpp"
 
 #define HTTP "http.cpp : "
 
 using namespace std;
+using json = nlohmann::json;
 
 /**
  * @class http

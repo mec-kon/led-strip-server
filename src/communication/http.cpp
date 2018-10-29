@@ -9,7 +9,10 @@
  * @return void
  */
 http::http() {
-    server_s.create_server();
+    string config = file_f.open_file("websiteConfig.json");
+    json json1 = json::parse(config);
+
+    server_s.create_server(json1["port"]);
 }
 
 /**

@@ -7,6 +7,7 @@ mode::mode() {
     mode_information = nullptr;
     mode_is_running = nullptr;
 }
+
 mode::mode(data *data1, int *mode_is_r) {
     mode_information = data1;
     mode_is_running = mode_is_r;
@@ -22,6 +23,10 @@ void mode::start(sem_t *thread_end) {
     if (mode_information->mode == "fade") {
         cout << MODE << "mode = fade" << endl;
         fade();
+    }
+    else if(mode_information->mode == "changingColors"){
+        cout << MODE << "mode = changingColors" << endl;
+        changing_colors();
     }
     else {
         cout << MODE << "mode = one color" << endl;
@@ -48,21 +53,20 @@ void mode::fade() {
     while (*mode_is_running) {
 
 
-        if (i == ARRAY_SIZE - 1) {
-            color1 = mode_information->color_array[ARRAY_SIZE-1];
+        if (i == mode_information->number_of_colors - 1) {
+            color1 = mode_information->color_array[mode_information->number_of_colors - 1];
             color2 = mode_information->color_array[0];
-            i++;
         }
         else {
-            if (i == ARRAY_SIZE) {
+            if (i == mode_information->number_of_colors) {
                 i = 0;
             }
             color1 = mode_information->color_array[i];
             color2 = mode_information->color_array[i + 1];
-            i++;
         }
+        i++;
         while (color1.red != color2.red || color1.blue != color2.blue || color1.green != color2.green) {
-            if(!(*mode_is_running)){
+            if (!(*mode_is_running)) {
                 break;
             }
 
@@ -94,7 +98,23 @@ void mode::fade() {
 
             this_thread::sleep_for(chrono::milliseconds(mode_information->time));
         }
-
     }
+}
 
+void mode::changing_colors() {
+    int i = 0;
+    color color1;
+    while (*mode_is_running) {
+        if (i == mode_information->number_of_colors) {
+            i = 0;
+        }
+        color1 = mode_information->color_array[i];
+        i++;
+
+        pwm_write(GPIO_RED, color1.red);
+        pwm_write(GPIO_GREEN, color1.green);
+        pwm_write(GPIO_BLUE, color1.blue);
+
+        this_thread::sleep_for(chrono::milliseconds(mode_information->time*10));
+    }
 }

@@ -18,8 +18,8 @@ private:
     data *mode_information;
 
     void one_color();
-
     void fade();
+    void changing_colors();
 
 };
 

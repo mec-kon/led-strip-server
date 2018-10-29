@@ -17,6 +17,7 @@ public:
 
     int time;
     string mode;
+    int number_of_colors;
 
 };
 

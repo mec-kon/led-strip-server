@@ -18,7 +18,7 @@ data::data(string *message) {
         color_array[0] = color1;
 
     }
-    else if (mode == "fade") {
+    else if (mode == "fade" || mode == "changingColors") {
         for (int i = 0; i < ARRAY_SIZE; i++) {
 
             int red = json1["color_array"][i]["color_red"];
@@ -29,5 +29,6 @@ data::data(string *message) {
             color_array[i] = color1;
         }
         time = json1["time"];
+        number_of_colors = json1["number_of_colors"];
     }
 }

@@ -109,17 +109,26 @@ string file::open_file(string filename) {
 string file::write_file(string filename, string content) {
 
     string data;
+    string file_path;
 
     if (filename == "") {
         filename = "index.html";
     }
-    if (file_exists(CONFIG_PATH + filename))
+
+    if(filename == "deviceConfig.json"){
+        file_path = STATIC_PATH;
+    }
+    else {
+        file_path = CONFIG_PATH;
+    }
+
+    if (file_exists(file_path + filename))
         data = "Added to existing file";
     else
         data = "Created new file";
 
     ofstream outfile;
-    outfile.open(CONFIG_PATH + filename);
+    outfile.open(file_path + filename);
     outfile << content;
     outfile.close();
 

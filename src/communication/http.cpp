@@ -85,6 +85,7 @@ string http::handle_request(string request, string mode) {
         }
         else {
             message = file_f.write_file(filename, content);
+            content = "";
         }
 
         string content_type = "text/plain";

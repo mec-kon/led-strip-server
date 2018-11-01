@@ -8,6 +8,11 @@
 using json = nlohmann::json;
 using namespace std;
 
+/**
+ * @class data
+ *
+ * This class extracts all data from the transmitted json file.
+ */
 class data {
 public:
 

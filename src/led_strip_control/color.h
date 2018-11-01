@@ -1,7 +1,11 @@
 #ifndef HTTP_SERVER_COLOR_H
 #define HTTP_SERVER_COLOR_H
 
-
+/**
+ * @class color
+ *
+ * This class is used to save a color.
+ */
 class color {
 public:
     color();

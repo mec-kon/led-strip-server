@@ -15,7 +15,14 @@ mode::mode(data *data1, int *mode_is_r) {
     cout << MODE << "constructor method called" << endl;
 }
 
-
+/**
+ * @brief method to start the choosen mode
+ *
+ * This method starts the mode selected on the web page.
+ * It is started in the main function in its own thread.
+ *
+ * @param thread_end
+ */
 void mode::start(sem_t *thread_end) {
     sem_wait(thread_end);
     cout << MODE << "current mode started" << endl;

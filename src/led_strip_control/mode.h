@@ -6,6 +6,11 @@
 
 #define MODE "mode.cpp : "
 
+/**
+ * @class mode
+ *
+ * This class takes care of the representation of the different modes.
+ */
 class mode {
 public:
     mode();

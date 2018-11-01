@@ -1,6 +1,10 @@
 #include <iostream>
 #include "file.h"
 
+file::file() {
+    HOME = getenv("HOME");
+}
+
 /**
  * @brief method to get the file name with file extension
  *

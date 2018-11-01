@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 2.8)
-project(http_server)
+project(led-strip-server)
 
 EXECUTE_PROCESS( COMMAND uname -m COMMAND tr -d '\n' OUTPUT_VARIABLE ARCHITECTURE )
 message( STATUS "detected architecture: ${ARCHITECTURE}" )
@@ -20,3 +20,7 @@ file(GLOB_RECURSE SRC_HEADERS ${PROJECT_SOURCE_DIR}/src/*.h ${PROJECT_SOURCE_DIR
 
 add_executable(${PROJECT_NAME}
         ${SRC_C_FILES} ${SRC_CXX_FILES} ${SRC_HEADERS} src/led_strip_control/color.cpp src/led_strip_control/color.h)
+        
+install (TARGETS ${PROJECT_NAME} DESTINATION /usr/local/bin/)
+install (DIRECTORY static/src DESTINATION $ENV{HOME}/.${PROJECT_NAME})
+install (DIRECTORY config DESTINATION $ENV{HOME}/.${PROJECT_NAME})

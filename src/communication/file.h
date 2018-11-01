@@ -14,12 +14,14 @@ using namespace std;
  */
 class file {
 public:
+    file();
     string open_file(string filename);
     string write_file(string filename, string content);
     string get_filename(string request);
     string get_file_ending(string filename);
 
 private:
+    string HOME;
     bool file_exists(string filename);
 };
 

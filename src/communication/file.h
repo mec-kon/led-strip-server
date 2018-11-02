@@ -3,6 +3,8 @@
 
 #include <string>
 #include <fstream>
+#include <sstream>
+#include <unistd.h>
 #include "../defines.h"
 
 using namespace std;
@@ -22,6 +24,8 @@ public:
 
 private:
     string HOME;
+    bool is_installed;
+    string get_working_path();
     bool file_exists(string filename);
 };
 

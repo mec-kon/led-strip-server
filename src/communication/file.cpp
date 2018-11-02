@@ -3,6 +3,44 @@
 
 file::file() {
     HOME = getenv("HOME");
+    string working_directory = get_working_path();
+    string bname = working_directory.substr(working_directory.find_last_of("/"), working_directory.size());
+
+    if (bname != "/cmake-build-debug" && bname != "build") {
+        is_installed = true;
+    }
+    else {
+        is_installed = false;
+    }
+}
+
+string file::get_working_path() {
+    char *temp = getcwd(0, 0);
+
+    if (temp != 0)
+        return temp;
+
+    int error = errno;
+
+    switch (error) {
+        // EINVAL can't happen - size argument > 0
+
+        // PATH_MAX includes the terminating nul,
+        // so ERANGE should not be returned
+
+        case EACCES:
+            throw std::runtime_error("Access denied");
+
+        case ENOMEM:
+            // I'm not sure whether this can happen or not
+            throw std::runtime_error("Insufficient storage");
+
+        default: {
+            std::ostringstream str;
+            str << "Unrecognised error " << error;
+            throw std::runtime_error(str.str());
+        }
+    }
 }
 
 /**
@@ -45,7 +83,7 @@ string file::get_file_ending(string filename) {
     char delim = '.';
 
     filename = filename.substr(0, filename.find_first_of('?'));
-    filename.erase(0, filename.find_last_of(delim)+1);
+    filename.erase(0, filename.find_last_of(delim) + 1);
 
     return filename;
 }
@@ -77,14 +115,24 @@ string file::open_file(string filename) {
 
     string file_path;
 
-    if(filename == "websiteConfig.json"){
-        file_path = CONFIG_PATH;
+    if (is_installed) {
+        if (filename == "websiteConfig.json") {
+            file_path = HOME + INSTALLED_CONFIG_PATH;
+        }
+        else {
+            file_path = HOME +INSTALLED_STATIC_PATH;
+        }
     }
     else {
-        file_path = STATIC_PATH;
+        if (filename == "websiteConfig.json") {
+            file_path = CONFIG_PATH;
+        }
+        else {
+            file_path = STATIC_PATH;
+        }
     }
 
-    if (file_exists(file_path + filename)) {
+    if(file_exists(file_path + filename)){
         string data;
         ifstream infile;
         string path = file_path + filename;
@@ -96,9 +144,23 @@ string file::open_file(string filename) {
         return data;
     }
     else {
-        return "file not found";
+        if(filename == "websiteConfig.json") {
+            return "{\"port\":9999}";
+        }
+        else if(filename == "deviceConfig.json") {
+            return "{\n"
+                   "  \"devices\": [\n"
+                   "    {\n"
+                   "      \"ipAddress\": \"localhost\",\n"
+                   "      \"port\": \"9999\"\n"
+                   "    }\n"
+                   "  ]\n"
+                   "}";
+        }
+        else {
+            return "file not found";
+        }
     }
-
 }
 
 /**
@@ -119,11 +181,21 @@ string file::write_file(string filename, string content) {
         filename = "index.html";
     }
 
-    if(filename == "deviceConfig.json"){
-        file_path = STATIC_PATH;
+    if(is_installed){
+        if (filename == "deviceConfig.json") {
+            file_path = HOME + INSTALLED_STATIC_PATH;
+        }
+        else {
+            file_path = HOME + INSTALLED_CONFIG_PATH;
+        }
     }
     else {
-        file_path = CONFIG_PATH;
+        if (filename == "deviceConfig.json") {
+            file_path = STATIC_PATH;
+        }
+        else {
+            file_path = CONFIG_PATH;
+        }
     }
 
     if (file_exists(file_path + filename))

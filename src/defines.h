@@ -7,7 +7,9 @@
  * This file contains all parameters that can be configured
  */
 #define STATIC_PATH "../static/src/"
+#define INSTALLED_STATIC_PATH "/.led-strip-server/src/"
 #define CONFIG_PATH "../config/"
+#define INSTALLED_CONFIG_PATH "/.led-strip-server/config/"
 #define MAX_PACKET_SIZE 4096
 #define MAX_POSSIBLE_CONNECTIONS 5
 

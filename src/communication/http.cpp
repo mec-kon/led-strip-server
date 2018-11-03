@@ -10,9 +10,16 @@
  */
 http::http() {
     string config = file_f.open_file("websiteConfig.json");
-    json json1 = json::parse(config);
-
-    server_s.create_server(json1["port"]);
+    json json1;
+    try {
+        json1 = json::parse(config);
+        server_s.create_server(json1["port"]);
+    }
+    catch (json::parse_error) {
+        cerr << HTTP << "could not read websiteConfig.json" << endl;
+        cout << HTTP << "Server created with default port 9999" << endl;
+        server_s.create_server(9999);
+    }
 }
 
 /**
@@ -30,7 +37,7 @@ void http::RUN(sem_t *network_connection_access, sem_t *network_connection_read,
         string data = handle_request(request, mode);
         bool new_message;
 
-        if(data != ""){
+        if(!data.empty()){
             new_message = true;
 
             sem_wait(network_connection_write);
@@ -163,7 +170,7 @@ int http::get_content_length(string request){
  * @return mode
  */
 string http::get_request_mode(string request) {
-    string mode = request.substr(0, request.find(" "));
+    string mode = request.substr(0, request.find(' '));
     return mode;
 }
 

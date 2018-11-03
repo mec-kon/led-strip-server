@@ -4,20 +4,15 @@
 file::file() {
     HOME = getenv("HOME");
     string working_directory = get_working_path();
-    string bname = working_directory.substr(working_directory.find_last_of("/"), working_directory.size());
+    string base_name = working_directory.substr(working_directory.find_last_of('/'), working_directory.size());
 
-    if (bname != "/cmake-build-debug" && bname != "build") {
-        is_installed = true;
-    }
-    else {
-        is_installed = false;
-    }
+    is_installed = base_name != "/cmake-build-debug" && base_name != "build";
 }
 
 string file::get_working_path() {
-    char *temp = getcwd(0, 0);
+    char *temp = getcwd(nullptr, 0);
 
-    if (temp != 0)
+    if (temp != nullptr)
         return temp;
 
     int error = errno;
@@ -63,7 +58,7 @@ string file::get_filename(string request) {
     //remove first char
     filename.erase(0, 1);
 
-    if (filename == "") {
+    if (filename.empty()) {
         filename = "index.html";
     }
 
@@ -109,7 +104,7 @@ bool file::file_exists(string filename) {
  */
 string file::open_file(string filename) {
 
-    if (filename == "") {
+    if (filename.empty()) {
         filename = "index.html";
     }
 
@@ -177,7 +172,7 @@ string file::write_file(string filename, string content) {
     string data;
     string file_path;
 
-    if (filename == "") {
+    if (filename.empty()) {
         filename = "index.html";
     }
 

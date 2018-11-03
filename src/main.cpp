@@ -8,7 +8,7 @@
 #include "led_strip_control/mode.h"
 #include "gpio_control/gpio.h"
 
-#define Filename "main.cpp : "
+#define MAIN "main.cpp : "
 
 using namespace std;
 
@@ -36,20 +36,28 @@ void thread_handler() {
         sem_wait(network_connection_read);
         sem_wait(network_connection_access);
 
-        cout << Filename << "data received in thread_handler()" << endl;
+        cout << MAIN << "data received in thread_handler()" << endl;
 
-        *mode_is_running = 0;
-
-        sem_wait(thread_end);
         data data1(message);
-        delete mode1;
-        *mode_is_running = 1;
-        mode1 = new mode(&data1, mode_is_running);
-        sem_post(thread_end);
-        color_thread = thread(&mode::start, mode1, thread_end);
-        color_thread.detach();
 
-        cout << Filename << "color_thread created in thread_handler()" << endl;
+        if(data1.is_valid){
+            *mode_is_running = 0;
+
+            sem_wait(thread_end);
+            delete mode1;
+            *mode_is_running = 1;
+            mode1 = new mode(&data1, mode_is_running);
+            sem_post(thread_end);
+            color_thread = thread(&mode::start, mode1, thread_end);
+            color_thread.detach();
+
+            cout << MAIN << "color_thread created in thread_handler()" << endl;
+        }
+        else {
+            cerr << MAIN << "received data invalid" << endl;
+        }
+
+
 
         sem_post(network_connection_access);
         sem_post(network_connection_write);
@@ -65,7 +73,7 @@ void thread_handler() {
  * @return void
  */
 void thread_init() {
-    cout << Filename << "initializing threads in thread_init()" << endl;
+    cout << MAIN << "initializing threads in thread_init()" << endl;
 
     thread network_thread(&http::RUN, &http1, network_connection_access, network_connection_read,
                           network_connection_write, message);
@@ -98,7 +106,7 @@ void semaphore_init() {
     thread_end = (sem_t *) malloc(sizeof(thread_end));
     sem_init(thread_end, 0, 1);
 
-    cout << Filename << "semaphores initialized in semaphore_init()" << endl;
+    cout << MAIN << "semaphores initialized in semaphore_init()" << endl;
 }
 
 

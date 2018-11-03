@@ -8,6 +8,8 @@
 using json = nlohmann::json;
 using namespace std;
 
+#define DATA "data.cpp : "
+
 /**
  * @class data
  *
@@ -23,6 +25,8 @@ public:
     int time;
     string mode;
     int number_of_colors;
+
+    bool is_valid;
 
 };
 

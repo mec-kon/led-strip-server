@@ -25,6 +25,6 @@ void pwm_write(int gpio, int value){
     softPwmWrite (gpio, value/4);
 #endif
 #ifdef __x86_64__
-    cout << GPIO << "GPIO : " << gpio << " VALUE : " << value << endl;
+    //cout << GPIO << "GPIO : " << gpio << " VALUE : " << value << endl;
 #endif
 }

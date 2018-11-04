@@ -14,9 +14,17 @@ Modes
 
 Three different modes are currently available.
 * The one color mode allows you to select a simple color.
-* The fade mode can be used to select several colors between which the color 
+* The fade mode can be used to smoothly transition inbetween several selected colors.
 of the LED strip moves.
 * The changing colors mode switches between all selected colors.
+
+## Download ##
+Download the server ```git clone https://github.com/mec-kon/led-strip-server.git```
+Then navigate into the server folder with ```cd led-strip-server```.
+
+## Config ##
+To use the server, you must change the ip address of the server.
+You can do this by typing ```nano static/src/deviceConfig.json```.
 
 ## Installation: ## 
 The easiest way to install the program is with CMake.  
@@ -27,7 +35,7 @@ You can do this with ```sudo apt-get install cmake wiringpi build-essential```.
 Then, all you have to do is create a new folder with ```mkdir build``` in the current project folder, change to this folder with ```cd build``` and create a makefile  
 with ```cmake .. -DCMAKE_BUILD_TYPE=Debug``` .  
 Then you can create the executables by simply typing ```make```  
-Now install the server with ```make install```.
+Now install the server with ```sudo make install```.
 
 ### Autostart ###
 

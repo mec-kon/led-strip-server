@@ -6,7 +6,7 @@ file::file() {
     string working_directory = get_working_path();
     string base_name = working_directory.substr(working_directory.find_last_of('/'), working_directory.size());
 
-    is_installed = base_name != "/cmake-build-debug" && base_name != "build";
+    is_installed = base_name != "/cmake-build-debug" && base_name != "/build";
 }
 
 string file::get_working_path() {

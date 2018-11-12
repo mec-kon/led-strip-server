@@ -17,7 +17,7 @@ using namespace std;
  * This class is responsible for the TCP connection over a socket.
  * An object of this class is used in the class http.
  */
-class server {
+class Server {
 
 public:
 

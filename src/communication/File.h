@@ -14,9 +14,9 @@ using namespace std;
  *
  * This class takes care of reading from and writing to files.
  */
-class file {
+class File {
 public:
-    file();
+    File();
     string open_file(string filename);
     string write_file(string filename, string content);
     string get_filename(string request);

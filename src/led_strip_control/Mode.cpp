@@ -1,14 +1,14 @@
 #include <chrono>
 #include <thread>
 #include <semaphore.h>
-#include "mode.h"
+#include "Mode.h"
 
-mode::mode() {
+Mode::Mode() {
     mode_information = nullptr;
     mode_is_running = nullptr;
 }
 
-mode::mode(data *data1, int *mode_is_r) {
+Mode::Mode(Data *data1, int *mode_is_r) {
     mode_information = data1;
     mode_is_running = mode_is_r;
 
@@ -23,7 +23,7 @@ mode::mode(data *data1, int *mode_is_r) {
  *
  * @param thread_end
  */
-void mode::start(sem_t *thread_end) {
+void Mode::start(sem_t *thread_end) {
     sem_wait(thread_end);
     cout << MODE << "current mode started" << endl;
 
@@ -44,17 +44,17 @@ void mode::start(sem_t *thread_end) {
     cout << MODE << "current mode stopped" << endl;
 }
 
-void mode::one_color() {
+void Mode::one_color() {
     pwm_write(GPIO_RED, mode_information->color_array[0].red);
     pwm_write(GPIO_GREEN, mode_information->color_array[0].green);
     pwm_write(GPIO_BLUE, mode_information->color_array[0].blue);
 
 }
 
-void mode::fade() {
+void Mode::fade() {
     int i = 0;
-    color color1;
-    color color2;
+    Color color1;
+    Color color2;
 
 
     while (*mode_is_running) {
@@ -108,9 +108,9 @@ void mode::fade() {
     }
 }
 
-void mode::changing_colors() {
+void Mode::changing_colors() {
     int i = 0;
-    color color1;
+    Color color1;
     while (*mode_is_running) {
         if (i == mode_information->number_of_colors) {
             i = 0;

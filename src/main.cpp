@@ -3,16 +3,16 @@
 #include <semaphore.h>
 
 
-#include "communication/http.h"
-#include "led_strip_control/data.h"
-#include "led_strip_control/mode.h"
-#include "gpio_control/gpio.h"
+#include "communication/Http.h"
+#include "led_strip_control/Data.h"
+#include "led_strip_control/Mode.h"
+#include "gpio_control/Gpio.h"
 
 #define MAIN "main.cpp : "
 
 using namespace std;
 
-http http1;
+Http http;
 
 sem_t *network_connection_access;
 sem_t *network_connection_read;
@@ -28,7 +28,7 @@ string *message;
  * When a new string is received, this method starts a new thread that executes the sent mode.
  */
 void thread_handler() {
-    mode *mode1 = new mode();
+    Mode *mode1 = new Mode();
     thread color_thread;
     int *mode_is_running = new int(0);
 
@@ -38,7 +38,7 @@ void thread_handler() {
 
         cout << MAIN << "data received in thread_handler()" << endl;
 
-        data data1(message);
+        Data data1(message);
 
         if(data1.is_valid){
             *mode_is_running = 0;
@@ -46,9 +46,9 @@ void thread_handler() {
             sem_wait(thread_end);
             delete mode1;
             *mode_is_running = 1;
-            mode1 = new mode(&data1, mode_is_running);
+            mode1 = new Mode(&data1, mode_is_running);
             sem_post(thread_end);
-            color_thread = thread(&mode::start, mode1, thread_end);
+            color_thread = thread(&Mode::start, mode1, thread_end);
             color_thread.detach();
 
             cout << MAIN << "color_thread created in thread_handler()" << endl;
@@ -75,7 +75,7 @@ void thread_handler() {
 void thread_init() {
     cout << MAIN << "initializing threads in thread_init()" << endl;
 
-    thread network_thread(&http::RUN, &http1, network_connection_access, network_connection_read,
+    thread network_thread(&Http::RUN, &http, network_connection_access, network_connection_read,
                           network_connection_write, message);
     thread administrative_thread(thread_handler);
     network_thread.join();

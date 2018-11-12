@@ -1,16 +1,16 @@
-#include "color.h"
+#include "Color.h"
 
-color::color(){
+Color::Color(){
 }
-color::color(int r, int g, int b) {
+Color::Color(int r, int g, int b) {
     red = r;
     green = g;
     blue = b;
 }
 
-bool color::operator==(const color &color2) const{
+bool Color::operator==(const Color &color2) const{
     return (red==color2.red) && (blue==color2.blue) && (green==color2.green);
 }
-bool color::operator!=(const color &color2) const{
+bool Color::operator!=(const Color &color2) const{
     return (red!=color2.red) || (blue!=color2.blue) || (green==color2.green);
 }

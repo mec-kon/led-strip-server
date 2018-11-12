@@ -1,4 +1,4 @@
-#include "http.h"
+#include "Http.h"
 
 /**
  * @brief constructor
@@ -8,18 +8,38 @@
  *
  * @return void
  */
-http::http() {
-    string config = file_f.open_file("websiteConfig.json");
-    json json1;
+Http::Http() {
+    string config = file.open_file("websiteConfig.json");
+    Json json;
     try {
-        json1 = json::parse(config);
-        server_s.create_server(json1["port"]);
+        json = Json::parse(config);
+        port = json["port"];
+
     }
-    catch (json::parse_error) {
+    catch (exception &e) {
         cerr << HTTP << "could not read websiteConfig.json" << endl;
+        cerr << HTTP << "error: " << e.what() << endl;
         cout << HTTP << "Server created with default port 9999" << endl;
-        server_s.create_server(9999);
+        port = 9999;
     }
+    server.create_server(port);
+
+    string device_config = file.open_file("deviceConfig.json");
+    try {
+        json = Json::parse(device_config);
+        device_address = json["devices"][0]["ipAddress"];
+        string device_port_string = json["devices"][0]["port"];
+        device_port = stoi(device_port_string) ;
+
+    }
+    catch (exception &e ) {
+        cerr << HTTP << "could not read deviceConfig.json" << endl;
+        cerr << HTTP << "error: " << e.what() << endl;
+
+        device_address = "localhost";
+        device_port = 9999;
+    }
+
 }
 
 /**
@@ -30,9 +50,9 @@ http::http() {
  * @return void
  *
  */
-void http::RUN(sem_t *network_connection_access, sem_t *network_connection_read, sem_t *network_connection_write , string *message) {
+void Http::RUN(sem_t *network_connection_access, sem_t *network_connection_read, sem_t *network_connection_write , string *message) {
     while (true) {
-        string request = server_s.receive_data();
+        string request = server.receive_data();
         string mode = get_request_mode(request);
         string data = handle_request(request, mode);
         bool new_message;
@@ -53,7 +73,7 @@ void http::RUN(sem_t *network_connection_access, sem_t *network_connection_read,
             new_message = false;
         }
 
-        server_s.close_connection();
+        server.close_connection();
 
         if(new_message){
             sem_post(network_connection_access);
@@ -76,9 +96,9 @@ void http::RUN(sem_t *network_connection_access, sem_t *network_connection_read,
  *
  * @return void
  */
-string http::handle_request(string request, string mode) {
-    string filename = file_f.get_filename(request);
-    string file_ending = file_f.get_file_ending(filename);
+string Http::handle_request(string request, string mode) {
+    string filename = file.get_filename(request);
+    string file_ending = file.get_file_ending(filename);
     string response;
     string content = "";
 
@@ -91,7 +111,7 @@ string http::handle_request(string request, string mode) {
            message  = "color received";
         }
         else {
-            message = file_f.write_file(filename, content);
+            message = file.write_file(filename, content);
             content = "";
         }
 
@@ -100,7 +120,7 @@ string http::handle_request(string request, string mode) {
 
     }
     else if (mode == "GET") {
-        string message = file_f.open_file(filename);
+        string message = file.open_file(filename);
         string content_type;
 
         if (message != "file not found") {
@@ -118,7 +138,7 @@ string http::handle_request(string request, string mode) {
         response = create_header(0, "text/html", "HTTP/1.1 404 NOT Found");
     }
 
-    server_s.send_data(response);
+    server.send_data(response);
 
     return content;
 }
@@ -132,19 +152,20 @@ string http::handle_request(string request, string mode) {
  * @return header_text (The text of the header as string.)
  *
  */
-string http::create_header(int message_length, string content_type, string status_code) {
+string Http::create_header(int message_length, string content_type, string status_code) {
 
     string header_text = status_code + "\nContent-Type: "
                          + content_type + "; charset=UTF-8\n"
                                           "Content-Encoding: UTF-8\nContent-Length: " +
                          to_string(message_length) +
-                         "\nServer: mec-kon's C++Server/1.0 (Linux)"
+                         "\nServer: mec-kon's C++Server/1.0 (Linux)" +
+                         "\nAccess-Control-Allow-Origin: " + device_address +
                          "\r\n\r\n";
 
     return header_text;
 }
 
-string http::get_content(string request, int content_length){
+string Http::get_content(string request, int content_length){
 
     string content = request.substr(request.find("\r\n\r\n")+4);
     content = content.substr(0, content_length);
@@ -152,7 +173,7 @@ string http::get_content(string request, int content_length){
     return content;
 }
 
-int http::get_content_length(string request){
+int Http::get_content_length(string request){
     request.erase(0,request.find("Content-Length:")+16);
     request = request.substr(0, request.find_first_of(' '));
 
@@ -169,7 +190,7 @@ int http::get_content_length(string request){
  * @param request
  * @return mode
  */
-string http::get_request_mode(string request) {
+string Http::get_request_mode(string request) {
     string mode = request.substr(0, request.find(' '));
     return mode;
 }
@@ -182,7 +203,7 @@ string http::get_request_mode(string request) {
  * @param file_ending
  * @return content_type
  */
-string http::get_content_type(string file_ending) {
+string Http::get_content_type(string file_ending) {
 
     string content_type = "text/plain";
 

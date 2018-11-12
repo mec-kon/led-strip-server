@@ -3,9 +3,9 @@
 
 #include <string>
 #include "../../lib/json.hpp"
-#include "color.h"
+#include "Color.h"
 #include "../defines.h"
-using json = nlohmann::json;
+using Json = nlohmann::json;
 using namespace std;
 
 #define DATA "data.cpp : "
@@ -15,12 +15,12 @@ using namespace std;
  *
  * This class extracts all data from the transmitted json file.
  */
-class data {
+class Data {
 public:
 
-    data(string *message);
+    Data(string *message);
 
-    color color_array[ARRAY_SIZE];
+    Color color_array[ARRAY_SIZE];
 
     int time;
     string mode;

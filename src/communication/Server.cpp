@@ -1,6 +1,6 @@
 #include <iostream>
 #include <fstream>
-#include "server.h"
+#include "Server.h"
 
 /**
  * @brief this method initializes a socket
@@ -9,7 +9,7 @@
  *
  * @return void
  */
-void server::create_server(int port) {
+void Server::create_server(int port) {
     struct sockaddr_in my_addr;
     my_addr.sin_family = AF_INET; //internet ip protocol v4
     my_addr.sin_port = htons(port); //PORT
@@ -34,7 +34,7 @@ void server::create_server(int port) {
  *
  * @return request
  */
-string server::receive_data() {
+string Server::receive_data() {
     socklen_t sock_size = sizeof(struct sockaddr_in);
 
     struct sockaddr_in host_addr;
@@ -54,14 +54,14 @@ string server::receive_data() {
  *
  * @param message
  */
-void server::send_data(string message) {
+void Server::send_data(string message) {
     send(connection_c, message.c_str(), message.length(), 0);
 }
 
 /**
  * @brief this method closes a socket
  */
-void server::detach() {
+void Server::detach() {
     close(socket_s);
     close(connection_c);
 }
@@ -69,6 +69,6 @@ void server::detach() {
 /**
  * @brief this method closes a connection
  */
-void server::close_connection() {
+void Server::close_connection() {
     close(connection_c);
 }

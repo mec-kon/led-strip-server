@@ -1,14 +1,14 @@
 #include <iostream>
-#include "data.h"
+#include "Data.h"
 
-data::data(string *message) {
-    json json1;
+Data::Data(string *message) {
+    Json json1;
     int red = 0;
     int green = 0;
     int blue = 0;
 
     try {
-        json json1 = json::parse(*message);
+        Json json1 = Json::parse(*message);
 
         mode = json1["mode"];
         number_of_colors = json1["number_of_colors"];
@@ -19,7 +19,7 @@ data::data(string *message) {
             green = json1["color_array"][0]["color_green"];
             blue = json1["color_array"][0]["color_blue"];
 
-            color color1(red, green, blue);
+            Color color1(red, green, blue);
             color_array[0] = color1;
 
             mode = "oneColor";
@@ -27,7 +27,7 @@ data::data(string *message) {
         else if (mode == "fade" || mode == "changingColors") {
 
             if (number_of_colors < 2) {
-                color color1(red, green, blue);
+                Color color1(red, green, blue);
                 color_array[0] = color1;
                 mode = "oneColor";
             }
@@ -38,7 +38,7 @@ data::data(string *message) {
                     green = json1["color_array"][i]["color_green"];
                     blue = json1["color_array"][i]["color_blue"];
 
-                    color color1(red, green, blue);
+                    Color color1(red, green, blue);
                     color_array[i] = color1;
                 }
                 time = json1["time"];
@@ -47,7 +47,7 @@ data::data(string *message) {
         cout << DATA << "json data read" << endl;
         is_valid = true;
     }
-    catch (json::parse_error){
+    catch (Json::parse_error){
         cerr << DATA << "could not read json data" << endl;
         is_valid = false;
     }

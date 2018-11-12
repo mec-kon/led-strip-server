@@ -6,12 +6,12 @@
  *
  * This class is used to save a color.
  */
-class color {
+class Color {
 public:
-    color();
-    color(int r, int g, int b);
-    bool operator==(const color &color2) const;
-    bool operator!=(const color &color2) const;
+    Color();
+    Color(int r, int g, int b);
+    bool operator==(const Color &color2) const;
+    bool operator!=(const Color &color2) const;
 
     int red;
     int green;

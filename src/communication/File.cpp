@@ -1,7 +1,7 @@
 #include <iostream>
-#include "file.h"
+#include "File.h"
 
-file::file() {
+File::File() {
     HOME = getenv("HOME");
     string working_directory = get_working_path();
     string base_name = working_directory.substr(working_directory.find_last_of('/'), working_directory.size());
@@ -9,7 +9,7 @@ file::file() {
     is_installed = base_name != "/cmake-build-debug" && base_name != "/build";
 }
 
-string file::get_working_path() {
+string File::get_working_path() {
     char *temp = getcwd(nullptr, 0);
 
     if (temp != nullptr)
@@ -47,7 +47,7 @@ string file::get_working_path() {
  * @param request (The HTTP request.)
  * @return filename (The filename with extension as string.)
  */
-string file::get_filename(string request) {
+string File::get_filename(string request) {
     string filename;
     char delim = ' ';
 
@@ -74,7 +74,7 @@ string file::get_filename(string request) {
  * @param filename (The file name with extension as string.)
  * @return filename (The file extension without file name as string.)
  */
-string file::get_file_ending(string filename) {
+string File::get_file_ending(string filename) {
     char delim = '.';
 
     filename = filename.substr(0, filename.find_first_of('?'));
@@ -89,7 +89,7 @@ string file::get_file_ending(string filename) {
  * @param filename (File name to be checked.)
  * @return file_f (A boolean variable that specifies whether the file exists or not.)
  */
-bool file::file_exists(string filename) {
+bool File::file_exists(string filename) {
     ifstream file_f(filename.c_str());
     return (bool) file_f;
 }
@@ -102,7 +102,7 @@ bool file::file_exists(string filename) {
  * @param filename (Name of the given file.)
  * @return data (Content of the file as string, if it exists. Otherwise "file not found".)
  */
-string file::open_file(string filename) {
+string File::open_file(string filename) {
 
     if (filename.empty()) {
         filename = "index.html";
@@ -167,7 +167,7 @@ string file::open_file(string filename) {
  * @param content
  * @return data
  */
-string file::write_file(string filename, string content) {
+string File::write_file(string filename, string content) {
 
     string data;
     string file_path;

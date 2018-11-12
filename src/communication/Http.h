@@ -3,29 +3,33 @@
 
 #include <iostream>
 #include <semaphore.h>
+#include <string>
 
-#include "server.h"
-#include "file.h"
+#include "Server.h"
+#include "File.h"
 #include "../../lib/json.hpp"
 
 #define HTTP "http.cpp : "
 
 using namespace std;
-using json = nlohmann::json;
+using Json = nlohmann::json;
 
 /**
  * @class http
  *
  *This class is responsible for processing HTTP requests and sending HTTP requests.
  */
-class http {
+class Http {
 public:
-    http();
+    Http();
     void RUN(sem_t *network_connection_access, sem_t *network_connection_read, sem_t *network_connection_write , string *message);
 
 private:
-    server server_s;
-    file file_f;
+    Server server;
+    File file;
+    int port;
+    int device_port;
+    string device_address;
 
     string create_header(int message_length, string content_type, string status_code);
     string get_content(string request, int content_length);

@@ -1,8 +1,8 @@
 #ifndef HTTP_SERVER_MODE_H
 #define HTTP_SERVER_MODE_H
 
-#include "data.h"
-#include "../gpio_control/gpio.h"
+#include "Data.h"
+#include "../gpio_control/Gpio.h"
 
 #define MODE "mode.cpp : "
 
@@ -11,16 +11,16 @@
  *
  * This class takes care of the representation of the different modes.
  */
-class mode {
+class Mode {
 public:
-    mode();
-    mode(data *data1, int *mode_is_r);
+    Mode();
+    Mode(Data *data1, int *mode_is_r);
 
     void start(sem_t *thread_end);
 
 private:
     int *mode_is_running;
-    data *mode_information;
+    Data *mode_information;
 
     void one_color();
     void fade();

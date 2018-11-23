@@ -24,22 +24,6 @@ Http::Http() {
     }
     server.create_server(port);
 
-    string device_config = file.open_file("deviceConfig.json");
-    try {
-        json = Json::parse(device_config);
-        device_address = json["devices"][0]["ipAddress"];
-        string device_port_string = json["devices"][0]["port"];
-        device_port = stoi(device_port_string) ;
-
-    }
-    catch (exception &e ) {
-        cerr << HTTP << "could not read deviceConfig.json" << endl;
-        cerr << HTTP << "error: " << e.what() << endl;
-
-        device_address = "localhost";
-        device_port = 9999;
-    }
-
 }
 
 /**
@@ -159,7 +143,6 @@ string Http::create_header(int message_length, string content_type, string statu
                                           "Content-Encoding: UTF-8\nContent-Length: " +
                          to_string(message_length) +
                          "\nServer: mec-kon's C++Server/1.0 (Linux)" +
-                         "\nAccess-Control-Allow-Origin: " + device_address +
                          "\r\n\r\n";
 
     return header_text;

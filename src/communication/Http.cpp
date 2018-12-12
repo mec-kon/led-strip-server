@@ -34,14 +34,15 @@ Http::Http() {
  * @return void
  *
  */
-void Http::RUN(sem_t *network_connection_access, sem_t *network_connection_read, sem_t *network_connection_write , string *message) {
+void Http::RUN(sem_t *network_connection_access, sem_t *network_connection_read, sem_t *network_connection_write,
+               string *message) {
     while (true) {
         string request = server.receive_data();
         string mode = get_request_mode(request);
         string data = handle_request(request, mode);
         bool new_message;
 
-        if(!data.empty()){
+        if (!data.empty()) {
             new_message = true;
 
             sem_wait(network_connection_write);
@@ -53,13 +54,13 @@ void Http::RUN(sem_t *network_connection_access, sem_t *network_connection_read,
             cout << HTTP << "data received in run()" << endl;
             cout << HTTP << data << endl;
         }
-        else{
+        else {
             new_message = false;
         }
 
         server.close_connection();
 
-        if(new_message){
+        if (new_message) {
             sem_post(network_connection_access);
             sem_post(network_connection_read);
         }
@@ -91,8 +92,8 @@ string Http::handle_request(string request, string mode) {
         content = get_content(request, content_len);
 
         string message;
-        if(filename == "colors.json"){
-           message  = "color received";
+        if (filename == "colors.json") {
+            message = "color received";
         }
         else {
             message = file.write_file(filename, content);
@@ -118,6 +119,9 @@ string Http::handle_request(string request, string mode) {
             response = create_header(message.length(), content_type, "HTTP/1.1 404 NOT Found") + message;
         }
     }
+    else if (mode == "OPTIONS") {
+        response = create_cors_header("*");
+    }
     else {
         response = create_header(0, "text/html", "HTTP/1.1 404 NOT Found");
     }
@@ -138,26 +142,39 @@ string Http::handle_request(string request, string mode) {
  */
 string Http::create_header(int message_length, string content_type, string status_code) {
 
-    string header_text = status_code + "\nContent-Type: "
-                         + content_type + "; charset=UTF-8\n"
-                                          "Content-Encoding: UTF-8\nContent-Length: " +
-                         to_string(message_length) +
+    string header_text = status_code +
+                         "\nContent-Type: " + content_type + "; charset=UTF-8" +
+                         "\nContent-Encoding: UTF-8" +
+                         "\nContent-Length: " + to_string(message_length) +
                          "\nServer: mec-kon's C++Server/1.0 (Linux)" +
                          "\r\n\r\n";
 
     return header_text;
 }
 
-string Http::get_content(string request, int content_length){
+string Http::create_cors_header(string cors_ip_address) {
+    string header_text = "HTTP/1.1 200 OK"
+                         "\nContent-Type: text/plain; charset=UTF-8"
+                         "\nContent-Encoding: UTF-8"
+                         "\nContent-Length: 0"
+                         "\nServer: mec-kon's C++Server/1.0 (Linux)"
+                         "\nAccess-Control-Allow-Origin: " + cors_ip_address +
+                         "\nAccess-Control-Allow-Methods: POST" +
+                         "\nAccess-Control-Allow-Headers: Content-Type" +
+                         "\r\n\r\n";
+    return header_text;
+}
 
-    string content = request.substr(request.find("\r\n\r\n")+4);
+string Http::get_content(string request, int content_length) {
+
+    string content = request.substr(request.find("\r\n\r\n") + 4);
     content = content.substr(0, content_length);
 
     return content;
 }
 
-int Http::get_content_length(string request){
-    request.erase(0,request.find("Content-Length:")+16);
+int Http::get_content_length(string request) {
+    request.erase(0, request.find("Content-Length:") + 16);
     request = request.substr(0, request.find_first_of(' '));
 
     int len = stoi(request);

@@ -22,3 +22,5 @@ add_executable(${PROJECT_NAME}
 install (TARGETS ${PROJECT_NAME} DESTINATION /usr/local/bin/)
 install (DIRECTORY static/src DESTINATION $ENV{HOME}/.${PROJECT_NAME})
 install (DIRECTORY config DESTINATION $ENV{HOME}/.${PROJECT_NAME})
+install(CODE "execute_process(COMMAND sudo chown -c $ENV{USER} $ENV{HOME}/.led-strip-server/src/deviceConfig.json)")
+install(CODE "execute_process(COMMAND sudo chown -c $ENV{USER} $ENV{HOME}/.led-strip-server/config/websiteConfig.json)")

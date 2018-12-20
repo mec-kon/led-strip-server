@@ -36,8 +36,6 @@ Then, all you have to do is create a new folder with ```mkdir build``` in the cu
 with ```cmake .. -DCMAKE_BUILD_TYPE=Debug``` .  
 Then you can create the executables by simply typing ```make```  
 Now install the server with ```sudo make install```.
-To change the owner of the folder containing the configuration files to the current owner, type 
-```sudo chown -cR $USER:$GROUPS $HOME/.led-strip-server/```
 
 ### Autostart ###
 

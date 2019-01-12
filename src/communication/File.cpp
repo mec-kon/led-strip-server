@@ -91,6 +91,7 @@ string File::get_file_ending(string filename) {
  */
 bool File::file_exists(string filename) {
     ifstream file_f(filename.c_str());
+    file_f.close();
     return (bool) file_f;
 }
 

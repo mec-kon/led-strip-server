@@ -29,8 +29,8 @@ private:
     File file;
     int port;
 
-
     string create_header(int message_length, string content_type, string status_code);
+    string create_cors_header(string cors_ip_address);
     string get_content(string request, int content_length);
     int get_content_length(string request);
     string handle_request(string request, string mode);

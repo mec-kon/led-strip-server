@@ -19,6 +19,8 @@ file(GLOB_RECURSE SRC_HEADERS ${PROJECT_SOURCE_DIR}/src/*.h ${PROJECT_SOURCE_DIR
 add_executable(${PROJECT_NAME}
         ${SRC_C_FILES} ${SRC_CXX_FILES} ${SRC_HEADERS})
 
+target_link_libraries(${PROJECT_NAME} mosquittopp)
+
 install (TARGETS ${PROJECT_NAME} DESTINATION /usr/local/bin/)
 install (DIRECTORY static/src DESTINATION $ENV{HOME}/.${PROJECT_NAME})
 install (DIRECTORY config DESTINATION $ENV{HOME}/.${PROJECT_NAME})

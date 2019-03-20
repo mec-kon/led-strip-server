@@ -5,7 +5,7 @@
 #include <fstream>
 #include <sstream>
 #include <unistd.h>
-#include "../defines.h"
+#include "defines.h"
 
 using namespace std;
 

@@ -9,7 +9,7 @@
 
 using namespace std;
 
-#ifdef __arm__
+#ifdef IS_RASPBERRY_PI
 #include <wiringPi.h>
 #include <softPwm.h>
 #endif

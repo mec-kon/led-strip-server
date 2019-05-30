@@ -9,17 +9,35 @@ if( ${ARCHITECTURE} STREQUAL "x86_64" )
     # added -pthread
     set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -pthread")
 else()
-    # added -pthread -lwiringPi
+    # added -pthread -lwiringPi on Rasperry Pi
+    add_definitions(-DIS_RASPBERRY_PI)
     set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -pthread -lwiringPi")
 endif()
+
+# in order to use mqtt, libmosquittopp must be installed
+option(USE_MQTT "use mqtt in project" ON)
+
 
 file(GLOB_RECURSE SRC_CXX_FILES ${PROJECT_SOURCE_DIR}/src/*.cpp ${PROJECT_SOURCE_DIR}/src/*/*.cpp)
 file(GLOB_RECURSE SRC_HEADERS ${PROJECT_SOURCE_DIR}/src/*.h ${PROJECT_SOURCE_DIR}/src/*/*.h )
 
-add_executable(${PROJECT_NAME}
-        ${SRC_C_FILES} ${SRC_CXX_FILES} ${SRC_HEADERS})
+# in order to use mqtt, libmosquittopp must be installed
+if(USE_MQTT)
+    add_definitions(-DUSE_MQTT)
+    message(STATUS "mqtt enabled")
+else()
+    list(REMOVE_ITEM SRC_CXX_FILES ${PROJECT_SOURCE_DIR}/src/communication/Mqtt.cpp)
+    list(REMOVE_ITEM SRC_HEADRES ${PROJECT_SOURCE_DIR}/src/communication/Mqtt.h)
+    message(STATUS "mqtt disabled")
+endif()
 
-target_link_libraries(${PROJECT_NAME} mosquittopp)
+add_executable(${PROJECT_NAME}
+        ${SRC_CXX_FILES} ${SRC_HEADERS})
+
+# in order to use mqtt, libmosquittopp must be installed
+if(USE_MQTT)
+    target_link_libraries(${PROJECT_NAME} mosquittopp)
+endif()
 
 install (TARGETS ${PROJECT_NAME} DESTINATION /usr/local/bin/)
 install (DIRECTORY static/src DESTINATION $ENV{HOME}/.${PROJECT_NAME})

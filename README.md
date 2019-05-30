@@ -27,13 +27,16 @@ To use the server, you must change the ip address of the server.
 You can do this by typing ```nano static/src/deviceConfig.json```.
 
 ## Installation: ## 
-The easiest way to install the program is with CMake.  
+The easiest way to build the program is with CMake.  
 
 First you need to install all required dependencies.
 You can do this with ```sudo apt-get install cmake wiringpi build-essential```.
 
+You will also need to install libmosquittopp if you want to use mqtt in this project.
+You can do this with ```sudo apt-get install libmosquittopp-dev```.
+
 Then, all you have to do is create a new folder with ```mkdir build``` in the current project folder, change to this folder with ```cd build``` and create a makefile  
-with ```cmake .. -DCMAKE_BUILD_TYPE=Debug``` .  
+with ```cmake ..``` or ```cmake .. -DUSE_MQTT=OFF``` if you don't want to use mqtt .  
 Then you can create the executables by simply typing ```make```  
 Now install the server with ```sudo make install```.
 

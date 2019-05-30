@@ -3,8 +3,11 @@
 #include <semaphore.h>
 
 
-#include "communication/Http.h"
+#ifdef USE_MQTT
 #include "communication/Mqtt.h"
+#endif
+
+#include "communication/Http.h"
 #include "led_strip_control/Data.h"
 #include "led_strip_control/Mode.h"
 #include "gpio_control/Gpio.h"
@@ -14,7 +17,10 @@
 using namespace std;
 
 Http http;
+
+#ifdef USE_MQTT
 Mqtt *mqtt = nullptr;
+#endif
 
 sem_t *network_connection_access;
 sem_t *network_connection_read;
@@ -77,12 +83,13 @@ void thread_handler() {
 void thread_init() {
     cout << MAIN << "initializing threads in thread_init()" << endl;
 
+#ifdef USE_MQTT
     vector<string> subscription_topic_list;
     subscription_topic_list.push_back("subscribe/test");
     mqtt = new Mqtt("led-strip-server", "publish/test", subscription_topic_list, "192.168.1.141",
             network_connection_access, network_connection_read, network_connection_write, message);
     mqtt->subscribe();
-
+#endif
     thread network_thread(&Http::RUN, &http, network_connection_access, network_connection_read,
                           network_connection_write, message);
     thread administrative_thread(thread_handler);

@@ -58,6 +58,24 @@ private:
     void on_message(const struct mosquitto_message *message);
 
 public:
+
+    /**
+     * @brief constructor
+     *
+     * This is the constructor of the mqtt class.
+     *
+     * @param publish_topic null terminated string of the topic to publish to
+     * @param subscribe_topic the subscription pattern
+     * @param host the hostname or ip address of the broker to connect to
+     * @param port the network port to connect to (usually 1883)
+     * @param username username, if expected by the server
+     * @param password password, if expected by the server
+     */
+    Mqtt(string id, string publish_topic,vector<string> subscription_topic_list, string host,
+            sem_t *network_connection_access, sem_t *network_connection_read, sem_t *network_connection_write,
+            string *message, string username, string password);
+
+
     /**
      * @brief constructor
      *

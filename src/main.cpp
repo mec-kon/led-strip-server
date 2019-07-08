@@ -87,7 +87,7 @@ void thread_init() {
     vector<string> subscription_topic_list;
     subscription_topic_list.push_back("subscribe/test");
     mqtt = new Mqtt("led-strip-server", "publish/test", subscription_topic_list, "192.168.1.141",
-            network_connection_access, network_connection_read, network_connection_write, message);
+            network_connection_access, network_connection_read, network_connection_write, message, "user", "passw0rd");
     mqtt->subscribe();
 #endif
     thread network_thread(&Http::RUN, &http, network_connection_access, network_connection_read,

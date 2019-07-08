@@ -2,6 +2,50 @@
 
 Mqtt::Mqtt(string id, string publish_topic,vector<string> subscription_topic_list, string host,
            sem_t *network_connection_access, sem_t *network_connection_read, sem_t *network_connection_write,
+           string *message, string username, string password) : mosquittopp(id.c_str())
+{
+    File file;
+    string config = file.open_file("websiteConfig.json");
+    Json json;
+    try {
+        json = Json::parse(config);
+        this->port = json["mqttPort"];
+
+    }
+    catch (exception &e) {
+        cerr << MQTT << "could not read websiteConfig.json" << endl;
+        cerr << MQTT << "error: " << e.what() << endl;
+        cout << MQTT << "Server created with default mqtt-port 1883" << endl;
+        this->port = 1883;
+    }
+
+
+    mosqpp::lib_init();
+    this->id = id;
+    this->keepalive = 60;
+    this->host = host;
+    this->publish_topic = publish_topic;
+    this->subscription_topic_list = subscription_topic_list;
+
+    this->network_connection_access = network_connection_access;
+    this->network_connection_read = network_connection_read;
+    this->network_connection_write = network_connection_write;
+    this->message = message;
+
+    mosquittopp::username_pw_set(username.c_str(), password.c_str());
+
+    /*
+     * Connect to an MQTT broker. This is a non-blocking call. If you use mosquitto_connect_async your client must use
+     * the threaded interface mosquitto_loop_start.
+     */
+    connect_async(this->host.c_str(), this->port, this->keepalive);
+    loop_start();
+};
+
+
+
+Mqtt::Mqtt(string id, string publish_topic,vector<string> subscription_topic_list, string host,
+           sem_t *network_connection_access, sem_t *network_connection_read, sem_t *network_connection_write,
            string *message) : mosquittopp(id.c_str())
 {
     File file;

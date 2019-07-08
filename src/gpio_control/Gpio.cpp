@@ -15,7 +15,7 @@ void gpio_init(){
     softPwmCreate (GPIO_GREEN, 0, 64) ;
     softPwmCreate (GPIO_BLUE, 0, 64) ;
 
-    cout << "raspverry " << endl;
+    cout << "raspberry " << endl;
 #else
     cout << GPIO << "GPIO init" << endl;
 #endif

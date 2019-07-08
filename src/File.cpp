@@ -116,7 +116,7 @@ string File::open_file(string filename) {
             file_path = HOME + INSTALLED_CONFIG_PATH;
         }
         else {
-            file_path = HOME +INSTALLED_STATIC_PATH;
+            file_path = HOME + INSTALLED_STATIC_PATH;
         }
     }
     else {

@@ -27,7 +27,6 @@ if(USE_MQTT)
     message(STATUS "mqtt enabled")
 else()
     list(REMOVE_ITEM SRC_CXX_FILES ${PROJECT_SOURCE_DIR}/src/communication/Mqtt.cpp)
-    list(REMOVE_ITEM SRC_HEADRES ${PROJECT_SOURCE_DIR}/src/communication/Mqtt.h)
     message(STATUS "mqtt disabled")
 endif()
 

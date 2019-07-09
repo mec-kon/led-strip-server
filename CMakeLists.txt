@@ -5,6 +5,13 @@ project(led-strip-server)
 EXECUTE_PROCESS( COMMAND uname -m COMMAND tr -d '\n' OUTPUT_VARIABLE ARCHITECTURE )
 message( STATUS "detected architecture: ${ARCHITECTURE}" )
 
+if(${CMAKE_BUILD_TYPE} MATCHES Debug)
+    add_definitions(-DDEBUG_MODE)
+    message("Debug Build")
+elseif(${CMAKE_BUILD_TYPE} MATCHES Release)
+    message("Release Build")
+endif()
+
 if( ${ARCHITECTURE} STREQUAL "x86_64" )
     # added -pthread
     set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -pthread")

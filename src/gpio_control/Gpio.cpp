@@ -15,8 +15,8 @@ void gpio_init(){
     softPwmCreate (GPIO_GREEN, 0, 64) ;
     softPwmCreate (GPIO_BLUE, 0, 64) ;
 
-    cout << "raspberry " << endl;
-#else
+#endif
+#ifdef DEBUG_MODE
     cout << GPIO << "GPIO init" << endl;
 #endif
 }
@@ -24,7 +24,8 @@ void gpio_init(){
 void pwm_write(int gpio, int value){
 #ifdef IS_RASPBERRY_PI
     softPwmWrite (gpio, value/4);
-#else
-    //cout << GPIO << "GPIO : " << gpio << " VALUE : " << value << endl;
+#endif
+#ifdef DEBUG_MODE
+    cout << GPIO << "GPIO : " << gpio << " VALUE : " << value << endl;
 #endif
 }

@@ -15,7 +15,9 @@ Mqtt::Mqtt(string id, string publish_topic,vector<string> subscription_topic_lis
     catch (exception &e) {
         cerr << MQTT << "could not read websiteConfig.json" << endl;
         cerr << MQTT << "error: " << e.what() << endl;
+#ifdef DEBUG_MODE
         cout << MQTT << "Server created with default mqtt-port 1883" << endl;
+#endif
         this->port = 1883;
     }
 
@@ -125,7 +127,9 @@ bool Mqtt::subscribe() {
 }
 
 void Mqtt::on_subscribe(int, int, const int *) {
+#ifdef DEBUG_MODE
     cout << MQTT <<"Subscription succeeded." << endl;
+#endif
 }
 
 void Mqtt::on_message(const struct mosquitto_message *message) {
@@ -142,25 +146,33 @@ void Mqtt::on_message(const struct mosquitto_message *message) {
     sem_post(network_connection_access);
     sem_post(network_connection_read);
 
+#ifdef DEBUG_MODE
     cout << MQTT << "data received" << endl;
     cout<< MQTT << "payload: " << payload << endl;
     cout<< MQTT << "topic: " << topic << endl;
+#endif
 }
 
 void Mqtt::on_disconnect(int rc) {
+#ifdef DEBUG_MODE
     cout << MQTT << "disconnection(" << rc << ")" << endl;
+#endif
 }
 
 void Mqtt::on_connect(int rc)
 {
     if ( rc == 0 ) {
+#ifdef DEBUG_MODE
         cout << MQTT << "connected with server" << endl;
+#endif
     } else {
-        cout << MQTT << "impossible to connect with server(" << rc << ")" << endl;
+        cerr << MQTT << "impossible to connect with server(" << rc << ")" << endl;
     }
 }
 
 void Mqtt::on_publish(int mid)
 {
+#ifdef DEBUG_MODE
     cout << MQTT << "Message (" << mid << ") succeed to be published " << endl;
+#endif
 }

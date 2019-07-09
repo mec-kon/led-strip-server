@@ -44,7 +44,9 @@ void thread_handler() {
         sem_wait(network_connection_read);
         sem_wait(network_connection_access);
 
+#ifdef DEBUG_MODE
         cout << MAIN << "data received in thread_handler()" << endl;
+#endif
 
         Data data1(message);
 
@@ -58,8 +60,9 @@ void thread_handler() {
             sem_post(thread_end);
             color_thread = thread(&Mode::start, mode1, thread_end);
             color_thread.detach();
-
+#ifdef DEBUG_MODE
             cout << MAIN << "color_thread created in thread_handler()" << endl;
+#endif
         }
         else {
             cerr << MAIN << "received data invalid" << endl;
@@ -81,8 +84,9 @@ void thread_handler() {
  * @return void
  */
 void thread_init() {
+#ifdef DEBUG_MODE
     cout << MAIN << "initializing threads in thread_init()" << endl;
-
+#endif
 #ifdef USE_MQTT
     vector<string> subscription_topic_list;
     subscription_topic_list.push_back("subscribe/test");
@@ -121,7 +125,9 @@ void semaphore_init() {
     thread_end = (sem_t *) malloc(sizeof(thread_end));
     sem_init(thread_end, 0, 1);
 
+#ifdef DEBUG_MODE
     cout << MAIN << "semaphores initialized in semaphore_init()" << endl;
+#endif
 }
 
 

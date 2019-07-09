@@ -19,7 +19,9 @@ Http::Http() {
     catch (exception &e) {
         cerr << HTTP << "could not read websiteConfig.json" << endl;
         cerr << HTTP << "error: " << e.what() << endl;
+#ifdef DEBUG_MODE
         cout << HTTP << "Server created with default port 9999" << endl;
+#endif
         port = 9999;
     }
     server.create_server(port);
@@ -50,9 +52,10 @@ void Http::RUN(sem_t *network_connection_access, sem_t *network_connection_read,
 
 
             *message = data;
-
+#ifdef DEBUG_MODE
             cout << HTTP << "data received in run()" << endl;
             cout << HTTP << data << endl;
+#endif
         }
         else {
             new_message = false;

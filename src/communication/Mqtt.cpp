@@ -1,31 +1,38 @@
 #include "Mqtt.h"
 
-Mqtt::Mqtt(string id, string publish_topic,vector<string> subscription_topic_list, string host,
+Mqtt::Mqtt(string id, string publish_topic,vector<string> subscription_topic_list, string host, int port,
            sem_t *network_connection_access, sem_t *network_connection_read, sem_t *network_connection_write,
            string *message, string username, string password) : mosquittopp(id.c_str())
 {
+    connected = false;
+
+
+    /*
     File file;
     string config = file.open_file("websiteConfig.json");
     Json json;
     try {
         json = Json::parse(config);
         this->port = json["mqttPort"];
-
+        this->host = json["mqttHost"];
     }
     catch (exception &e) {
         cerr << MQTT << "could not read websiteConfig.json" << endl;
         cerr << MQTT << "error: " << e.what() << endl;
 #ifdef DEBUG_MODE
-        cout << MQTT << "Server created with default mqtt-port 1883" << endl;
+        cout << MQTT << "Server created with default mqtt-port 1883 on 127.0.0.1" << endl;
 #endif
         this->port = 1883;
+        this->host = "127.0.0.1";
     }
+    */
 
 
     mosqpp::lib_init();
     this->id = id;
     this->keepalive = 60;
     this->host = host;
+    this->port = port;
     this->publish_topic = publish_topic;
     this->subscription_topic_list = subscription_topic_list;
 
@@ -42,34 +49,48 @@ Mqtt::Mqtt(string id, string publish_topic,vector<string> subscription_topic_lis
      */
     connect_async(this->host.c_str(), this->port, this->keepalive);
     loop_start();
+
+    for (int i=0; i<200 && !connected; i++) {
+#ifdef DEBUG_MODE
+        cout << MQTT << "connecting..." << endl;
+#endif
+        sleep(1);
+    }
 };
 
 
 
-Mqtt::Mqtt(string id, string publish_topic,vector<string> subscription_topic_list, string host,
+Mqtt::Mqtt(string id, string publish_topic,vector<string> subscription_topic_list, string host, int port,
            sem_t *network_connection_access, sem_t *network_connection_read, sem_t *network_connection_write,
            string *message) : mosquittopp(id.c_str())
 {
+    connected = false;
+
+    /*
     File file;
     string config = file.open_file("websiteConfig.json");
     Json json;
     try {
         json = Json::parse(config);
         this->port = json["mqttPort"];
-
+        this->host = json["mqttHost"];
     }
     catch (exception &e) {
         cerr << MQTT << "could not read websiteConfig.json" << endl;
         cerr << MQTT << "error: " << e.what() << endl;
-        cout << MQTT << "Server created with default mqtt-port 1883" << endl;
+#ifdef DEBUG_MODE
+        cout << MQTT << "Server created with default mqtt-port 1883 on 127.0.0.1" << endl;
+#endif
         this->port = 1883;
+        this->host = "127.0.0.1";
     }
-
+    */
 
     mosqpp::lib_init();
     this->id = id;
     this->keepalive = 60;
     this->host = host;
+    this->port = port;
     this->publish_topic = publish_topic;
     this->subscription_topic_list = subscription_topic_list;
 
@@ -84,6 +105,13 @@ Mqtt::Mqtt(string id, string publish_topic,vector<string> subscription_topic_lis
      */
     connect_async(this->host.c_str(), this->port, this->keepalive);
     loop_start();
+
+    for (int i=0; i<200 && !connected; i++) {
+#ifdef DEBUG_MODE
+        cout << MQTT << "connecting..." << endl;
+#endif
+        sleep(1);
+    }
 };
 
 Mqtt::~Mqtt() {
@@ -111,14 +139,14 @@ bool Mqtt::publish(string message)
      * false: set to true to make the message retained.
      *
      */
-    int answer = mosqpp::mosquittopp::publish(NULL, publish_topic.c_str(), message.length(), message.c_str(), 1, false);
+    int answer = mosqpp::mosquittopp::publish(nullptr, publish_topic.c_str(), static_cast<int>(message.length()), message.c_str(), 1, false);
     return (answer == MOSQ_ERR_SUCCESS);
 }
 
 bool Mqtt::subscribe() {
     bool success = true;
-    for(int i=0; i<subscription_topic_list.size(); i++){
-        int answer = mosquittopp::subscribe(NULL, subscription_topic_list[i].c_str());
+    for(int i=0; i<static_cast<int>(subscription_topic_list.size()); i++){
+        int answer = mosquittopp::subscribe(nullptr, subscription_topic_list[static_cast<unsigned long>(i)].c_str());
         if(answer != MOSQ_ERR_SUCCESS){
             success = false;
         }
@@ -157,6 +185,7 @@ void Mqtt::on_disconnect(int rc) {
 #ifdef DEBUG_MODE
     cout << MQTT << "disconnection(" << rc << ")" << endl;
 #endif
+    connected = false;
 }
 
 void Mqtt::on_connect(int rc)
@@ -165,6 +194,7 @@ void Mqtt::on_connect(int rc)
 #ifdef DEBUG_MODE
         cout << MQTT << "connected with server" << endl;
 #endif
+        connected = true;
     } else {
         cerr << MQTT << "impossible to connect with server(" << rc << ")" << endl;
     }

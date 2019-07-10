@@ -12,7 +12,9 @@ Mode::Mode(Data *data1, int *mode_is_r) {
     mode_information = data1;
     mode_is_running = mode_is_r;
 
+#ifdef DEBUG_MODE
     cout << MODE << "constructor method called" << endl;
+#endif
 }
 
 /**
@@ -25,23 +27,33 @@ Mode::Mode(Data *data1, int *mode_is_r) {
  */
 void Mode::start(sem_t *thread_end) {
     sem_wait(thread_end);
+#ifdef DEBUG_MODE
     cout << MODE << "current mode started" << endl;
+#endif
 
     if (mode_information->mode == "fade") {
+#ifdef DEBUG_MODE
         cout << MODE << "mode = fade" << endl;
+#endif
         fade();
     }
     else if(mode_information->mode == "changingColors"){
+#ifdef DEBUG_MODE
         cout << MODE << "mode = changingColors" << endl;
+#endif
         changing_colors();
     }
     else {
+#ifdef DEBUG_MODE
         cout << MODE << "mode = one color" << endl;
+#endif
         one_color();
     }
 
     sem_post(thread_end);
+#ifdef DEBUG_MODE
     cout << MODE << "current mode stopped" << endl;
+#endif
 }
 
 void Mode::one_color() {

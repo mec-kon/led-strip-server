@@ -104,7 +104,7 @@ string Http::handle_request(string request, string mode) {
         }
 
         string content_type = "text/plain";
-        response = create_header(message.length(), content_type, "HTTP/1.1 200 OK") + message;
+        response = create_header(static_cast<int>(message.length()), content_type, "HTTP/1.1 200 OK") + message;
 
     }
     else if (mode == "GET") {
@@ -115,11 +115,11 @@ string Http::handle_request(string request, string mode) {
 
             content_type = get_content_type(file_ending);
 
-            response = create_header(message.length(), content_type, "HTTP/1.1 200 OK") + message;
+            response = create_header(static_cast<int>(message.length()), content_type, "HTTP/1.1 200 OK") + message;
 
         }
         else {
-            response = create_header(message.length(), content_type, "HTTP/1.1 404 NOT Found") + message;
+            response = create_header(static_cast<int>(message.length()), content_type, "HTTP/1.1 404 NOT Found") + message;
         }
     }
     else if (mode == "OPTIONS") {
@@ -171,7 +171,7 @@ string Http::create_cors_header(string cors_ip_address) {
 string Http::get_content(string request, int content_length) {
 
     string content = request.substr(request.find("\r\n\r\n") + 4);
-    content = content.substr(0, content_length);
+    content = content.substr(0, static_cast<unsigned long>(content_length));
 
     return content;
 }

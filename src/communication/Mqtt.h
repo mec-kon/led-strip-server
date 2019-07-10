@@ -21,7 +21,7 @@ using Json = nlohmann::json;
  * This class is responsible for the mqtt connection using mosquittopp.
  */
 class Mqtt : public mosqpp::mosquittopp {
-private:
+private:    
     string id;
     string host;
     string publish_topic;
@@ -32,6 +32,8 @@ private:
     sem_t *network_connection_read;
     sem_t *network_connection_write;
     string *message;
+
+    bool connected;
 
 
     /**
@@ -71,7 +73,7 @@ public:
      * @param username username, if expected by the server
      * @param password password, if expected by the server
      */
-    Mqtt(string id, string publish_topic,vector<string> subscription_topic_list, string host,
+    Mqtt(string id, string publish_topic,vector<string> subscription_topic_list, string host, int port,
             sem_t *network_connection_access, sem_t *network_connection_read, sem_t *network_connection_write,
             string *message, string username, string password);
 
@@ -86,7 +88,7 @@ public:
      * @param host the hostname or ip address of the broker to connect to
      * @param port the network port to connect to (usually 1883)
      */
-    Mqtt(string id, string publish_topic,vector<string> subscription_topic_list, string host,
+    Mqtt(string id, string publish_topic,vector<string> subscription_topic_list, string host, int port,
             sem_t *network_connection_access, sem_t *network_connection_read, sem_t *network_connection_write,
             string *message);
 

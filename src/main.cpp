@@ -89,9 +89,17 @@ void thread_init() {
 #endif
 #ifdef USE_MQTT
     vector<string> subscription_topic_list;
-    subscription_topic_list.push_back("subscribe/test");
-    mqtt = new Mqtt("led-strip-server", "publish/test", subscription_topic_list, "192.168.1.141",
-            network_connection_access, network_connection_read, network_connection_write, message, "user", "passw0rd");
+    subscription_topic_list.push_back(MQTT_SUBSCRIPTION_TOPIC);
+
+   /*
+    * if no authentication is required
+    *
+    * mqtt = new Mqtt(MQTT_CLIENT_ID, MQTT_PUBLISH_TOPIC, subscription_topic_list, MQTT_ADDRESS, MQTT_PORT,
+                network_connection_access, network_connection_read, network_connection_write, message);
+    */
+
+    mqtt = new Mqtt(MQTT_CLIENT_ID, MQTT_PUBLISH_TOPIC, subscription_topic_list, MQTT_ADDRESS, MQTT_PORT,
+            network_connection_access, network_connection_read, network_connection_write, message, MQTT_CLIENT, MQTT_CLIENT_PASSWORD);
     mqtt->subscribe();
 #endif
     thread network_thread(&Http::RUN, &http, network_connection_access, network_connection_read,

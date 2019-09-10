@@ -21,6 +21,7 @@ of the LED strip moves.
 ## Download ##
 Download the server ```git clone https://github.com/mec-kon/led-strip-server.git```
 Then navigate into the server folder with ```cd led-strip-server```.
+Initialize the submodules with ```git submodule update --init```
 
 ## Config ##
 To use the server, you must change the ip address of the server.

@@ -11,6 +11,11 @@
 Http::Http() {
     string config = file.open_file("websiteConfig.json");
     Json json;
+
+#ifdef DEBUG_MODE
+        cout << HTTP << "constructor method called" << endl;
+#endif
+
     try {
         json = Json::parse(config);
         port = json["port"];

@@ -61,6 +61,9 @@ private:
 
 public:
 
+    void connect_mqtt();
+
+
     /**
      * @brief constructor
      *

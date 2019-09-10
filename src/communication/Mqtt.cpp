@@ -43,19 +43,7 @@ Mqtt::Mqtt(string id, string publish_topic,vector<string> subscription_topic_lis
 
     mosquittopp::username_pw_set(username.c_str(), password.c_str());
 
-    /*
-     * Connect to an MQTT broker. This is a non-blocking call. If you use mosquitto_connect_async your client must use
-     * the threaded interface mosquitto_loop_start.
-     */
-    connect_async(this->host.c_str(), this->port, this->keepalive);
-    loop_start();
 
-    for (int i=0; i<200 && !connected; i++) {
-#ifdef DEBUG_MODE
-        cout << MQTT << "connecting..." << endl;
-#endif
-        sleep(1);
-    }
 };
 
 
@@ -99,6 +87,15 @@ Mqtt::Mqtt(string id, string publish_topic,vector<string> subscription_topic_lis
     this->network_connection_write = network_connection_write;
     this->message = message;
 
+};
+
+Mqtt::~Mqtt() {
+    disconnect();
+    loop_stop();
+    mosqpp::lib_cleanup();
+}
+
+void Mqtt::connect_mqtt(){
     /*
      * Connect to an MQTT broker. This is a non-blocking call. If you use mosquitto_connect_async your client must use
      * the threaded interface mosquitto_loop_start.
@@ -112,12 +109,7 @@ Mqtt::Mqtt(string id, string publish_topic,vector<string> subscription_topic_lis
 #endif
         sleep(1);
     }
-};
-
-Mqtt::~Mqtt() {
-    disconnect();
-    loop_stop();
-    mosqpp::lib_cleanup();
+    subscribe();
 }
 
 bool Mqtt::publish(string message)

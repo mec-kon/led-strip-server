@@ -87,6 +87,7 @@ void thread_init() {
 #ifdef DEBUG_MODE
     cout << MAIN << "initializing threads in thread_init()" << endl;
 #endif
+
 #ifdef USE_MQTT
     vector<string> subscription_topic_list;
     subscription_topic_list.push_back(MQTT_SUBSCRIPTION_TOPIC);
@@ -100,12 +101,15 @@ void thread_init() {
 
     mqtt = new Mqtt(MQTT_CLIENT_ID, MQTT_PUBLISH_TOPIC, subscription_topic_list, MQTT_ADDRESS, MQTT_PORT,
             network_connection_access, network_connection_read, network_connection_write, message, MQTT_CLIENT, MQTT_CLIENT_PASSWORD);
-    mqtt->subscribe();
 #endif
+
+
     thread network_thread(&Http::RUN, &http, network_connection_access, network_connection_read,
                           network_connection_write, message);
+    thread mqtt_thread(&Mqtt::connect_mqtt, mqtt);
     thread administrative_thread(thread_handler);
     network_thread.join();
+    mqtt_thread.join();
     administrative_thread.join();
 
 }

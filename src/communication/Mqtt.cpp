@@ -105,7 +105,7 @@ void Mqtt::connect_mqtt(){
 
     for (int i=0; i<200 && !connected; i++) {
 #ifdef DEBUG_MODE
-        cout << MQTT << "connecting..." << endl;
+        cout << MQTT_CPP << "connecting..." << endl;
 #endif
         sleep(1);
     }
@@ -148,7 +148,7 @@ bool Mqtt::subscribe() {
 
 void Mqtt::on_subscribe(int, int, const int *) {
 #ifdef DEBUG_MODE
-    cout << MQTT <<"Subscription succeeded." << endl;
+    cout << MQTT_CPP <<"Subscription succeeded." << endl;
 #endif
 }
 
@@ -167,15 +167,15 @@ void Mqtt::on_message(const struct mosquitto_message *message) {
     sem_post(network_connection_read);
 
 #ifdef DEBUG_MODE
-    cout << MQTT << "data received" << endl;
-    cout<< MQTT << "payload: " << payload << endl;
-    cout<< MQTT << "topic: " << topic << endl;
+    cout << MQTT_CPP << "data received" << endl;
+    cout<< MQTT_CPP << "payload: " << payload << endl;
+    cout<< MQTT_CPP << "topic: " << topic << endl;
 #endif
 }
 
 void Mqtt::on_disconnect(int rc) {
 #ifdef DEBUG_MODE
-    cout << MQTT << "disconnection(" << rc << ")" << endl;
+    cout << MQTT_CPP << "disconnection(" << rc << ")" << endl;
 #endif
     connected = false;
 }
@@ -184,17 +184,17 @@ void Mqtt::on_connect(int rc)
 {
     if ( rc == 0 ) {
 #ifdef DEBUG_MODE
-        cout << MQTT << "connected with server" << endl;
+        cout << MQTT_CPP << "connected with server" << endl;
 #endif
         connected = true;
     } else {
-        cerr << MQTT << "impossible to connect with server(" << rc << ")" << endl;
+        cerr << MQTT_CPP << "impossible to connect with server(" << rc << ")" << endl;
     }
 }
 
 void Mqtt::on_publish(int mid)
 {
 #ifdef DEBUG_MODE
-    cout << MQTT << "Message (" << mid << ") succeed to be published " << endl;
+    cout << MQTT_CPP << "Message (" << mid << ") succeed to be published " << endl;
 #endif
 }

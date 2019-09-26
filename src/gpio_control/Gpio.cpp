@@ -17,7 +17,7 @@ void gpio_init(){
 
 #endif
 #ifdef DEBUG_MODE
-    cout << GPIO << "GPIO init" << endl;
+    cout << GPIO_CPP << "GPIO init" << endl;
 #endif
 }
 
@@ -26,6 +26,6 @@ void pwm_write(int gpio, int value){
     softPwmWrite (gpio, value/4);
 #endif
 #ifdef DEBUG_MODE
-    cout << GPIO << "GPIO : " << gpio << " VALUE : " << value << endl;
+    cout << GPIO_CPP << "GPIO : " << gpio << " VALUE : " << value << endl;
 #endif
 }

@@ -8,10 +8,10 @@
 #include <vector>
 #include <semaphore.h>
 
-#include "../File.h"
+#include "../file_control/File.h"
 #include "../../lib/json.hpp"
 
-#define MQTT "mqtt.cpp: "
+#define MQTT_CPP "mqtt.cpp: "
 
 using namespace std;
 using Json = nlohmann::json;

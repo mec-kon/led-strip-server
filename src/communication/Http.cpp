@@ -13,7 +13,7 @@ Http::Http() {
     Json json;
 
 #ifdef DEBUG_MODE
-        cout << HTTP << "constructor method called" << endl;
+        cout << HTTP_CPP << "constructor method called" << endl;
 #endif
 
     try {
@@ -22,10 +22,10 @@ Http::Http() {
 
     }
     catch (exception &e) {
-        cerr << HTTP << "could not read websiteConfig.json" << endl;
-        cerr << HTTP << "error: " << e.what() << endl;
+        cerr << HTTP_CPP << "could not read websiteConfig.json" << endl;
+        cerr << HTTP_CPP << "error: " << e.what() << endl;
 #ifdef DEBUG_MODE
-        cout << HTTP << "Server created with default port 9999" << endl;
+        cout << HTTP_CPP << "Server created with default port 9999" << endl;
 #endif
         port = 9999;
     }
@@ -42,7 +42,7 @@ Http::Http() {
  *
  */
 void Http::RUN(sem_t *network_connection_access, sem_t *network_connection_read, sem_t *network_connection_write,
-               string *message) {
+               string *message, uint8_t *is_configuration_data) {
     while (true) {
         string request = server.receive_data();
         string mode = get_request_mode(request);
@@ -55,11 +55,12 @@ void Http::RUN(sem_t *network_connection_access, sem_t *network_connection_read,
             sem_wait(network_connection_write);
             sem_wait(network_connection_access);
 
+            *is_configuration_data = is_configuration_data_http;
 
             *message = data;
 #ifdef DEBUG_MODE
-            cout << HTTP << "data received in run()" << endl;
-            cout << HTTP << data << endl;
+            cout << HTTP_CPP << "data received in RUN()" << endl;
+            cout << HTTP_CPP << data << endl;
 #endif
         }
         else {
@@ -101,10 +102,19 @@ string Http::handle_request(string request, string mode) {
 
         string message;
         if (filename == "colors.json") {
+            is_configuration_data_http = false;
             message = "color received";
         }
+        else if(filename == "deviceConfig.json") {
+            is_configuration_data_http = DEVICE_CONFIG;
+            message = "deviceConfig received";
+        }
+        else if(filename == "websiteConfig.json") {
+            is_configuration_data_http = WEBSITE_CONFIG;
+            message = "websiteConfig received";
+        }
         else {
-            message = file.write_file(filename, content);
+            message = "The http-post was incorrect!";  //file.write_file(filename, content);
             content = "";
         }
 

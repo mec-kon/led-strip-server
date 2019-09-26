@@ -11,6 +11,9 @@
 #include "led_strip_control/Data.h"
 #include "led_strip_control/Mode.h"
 #include "gpio_control/Gpio.h"
+#include "file_control/File.h"
+#include "settings/Settings.h"
+
 
 #define MAIN "main.cpp : "
 
@@ -29,6 +32,7 @@ sem_t *network_connection_write;
 sem_t *thread_end;
 
 string *message;
+uint8_t *is_configuration_data;
 
 /**
  * @brief method to process data
@@ -44,29 +48,42 @@ void thread_handler() {
         sem_wait(network_connection_read);
         sem_wait(network_connection_access);
 
-#ifdef DEBUG_MODE
-        cout << MAIN << "data received in thread_handler()" << endl;
-#endif
 
-        Data data1(message);
-
-        if(data1.is_valid){
-            *mode_is_running = 0;
-
-            sem_wait(thread_end);
-            delete mode1;
-            *mode_is_running = 1;
-            mode1 = new Mode(&data1, mode_is_running);
-            sem_post(thread_end);
-            color_thread = thread(&Mode::start, mode1, thread_end);
-            color_thread.detach();
-#ifdef DEBUG_MODE
-            cout << MAIN << "color_thread created in thread_handler()" << endl;
-#endif
+        if (*is_configuration_data == WEBSITE_CONFIG) {
+            WebsiteSettings *settings = new WebsiteSettings(*message);
+            delete settings;
+        }
+        else if (*is_configuration_data == DEVICE_CONFIG){
+            DeviceSettings *settings = new DeviceSettings(*message);
+            delete settings;
         }
         else {
-            cerr << MAIN << "received data invalid" << endl;
+#ifdef DEBUG_MODE
+            cout << MAIN << "data received in thread_handler()" << endl;
+#endif
+
+            Data data1(message);
+
+            if(data1.is_valid){
+                *mode_is_running = 0;
+
+                sem_wait(thread_end);
+                delete mode1;
+                *mode_is_running = 1;
+                mode1 = new Mode(&data1, mode_is_running);
+                sem_post(thread_end);
+                color_thread = thread(&Mode::start, mode1, thread_end);
+                color_thread.detach();
+#ifdef DEBUG_MODE
+                cout << MAIN << "color_thread created in thread_handler()" << endl;
+#endif
+            }
+            else {
+                cerr << MAIN << "received data invalid" << endl;
+            }
+
         }
+
 
 
 
@@ -105,7 +122,7 @@ void thread_init() {
 
 
     thread network_thread(&Http::RUN, &http, network_connection_access, network_connection_read,
-                          network_connection_write, message);
+                          network_connection_write, message, is_configuration_data);
     thread mqtt_thread(&Mqtt::connect_mqtt, mqtt);
     thread administrative_thread(thread_handler);
     network_thread.join();
@@ -154,6 +171,7 @@ void semaphore_init() {
  */
 int main() {
     message = new string();
+    is_configuration_data = new uint8_t(0);
     gpio_init();
     semaphore_init();
     thread_init();

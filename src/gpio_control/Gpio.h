@@ -5,7 +5,7 @@
 
 #include "../defines.h"
 
-#define GPIO "gpio.cpp : "
+#define GPIO_CPP "gpio.cpp : "
 
 using namespace std;
 

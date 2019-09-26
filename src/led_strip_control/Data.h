@@ -8,7 +8,7 @@
 using Json = nlohmann::json;
 using namespace std;
 
-#define DATA "data.cpp : "
+#define DATA_CPP "data.cpp : "
 
 /**
  * @class data

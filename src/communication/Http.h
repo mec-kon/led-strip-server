@@ -6,10 +6,13 @@
 #include <string>
 
 #include "Server.h"
-#include "../File.h"
+#include "../file_control/File.h"
 #include "../../lib/json.hpp"
 
-#define HTTP "http.cpp : "
+#define HTTP_CPP "http.cpp : "
+
+#define WEBSITE_CONFIG 1
+#define DEVICE_CONFIG 2
 
 using namespace std;
 using Json = nlohmann::json;
@@ -22,12 +25,14 @@ using Json = nlohmann::json;
 class Http {
 public:
     Http();
-    void RUN(sem_t *network_connection_access, sem_t *network_connection_read, sem_t *network_connection_write , string *message);
+    void RUN(sem_t *network_connection_access, sem_t *network_connection_read, sem_t *network_connection_write , string *message,  uint8_t *is_configuration_data);
 
 private:
     Server server;
     File file;
     int port;
+
+    uint8_t is_configuration_data_http;
 
     string create_header(int message_length, string content_type, string status_code);
     string create_cors_header(string cors_ip_address);

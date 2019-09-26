@@ -44,11 +44,11 @@ Data::Data(string *message) {
                 time = json1["time"];
             }
         }
-        cout << DATA << "json data read" << endl;
+        cout << DATA_CPP << "json data read" << endl;
         is_valid = true;
     }
     catch (Json::parse_error){
-        cerr << DATA << "could not read json data" << endl;
+        cerr << DATA_CPP << "could not read json data" << endl;
         is_valid = false;
     }
 

@@ -45,5 +45,17 @@ DeviceSettings::DeviceSettings(string message) : Settings (message){
 }
 
 WebsiteSettings::WebsiteSettings(string message) : Settings (message){
+    try {
+        string config_file = file.open_file("websiteConfig.json");
+        config_file_json = Json::parse(config_file);
+    } catch (Json::parse_error) {
+        cerr << "WebsiteSettings: error" << endl;
+    }
 
+    for (Json::iterator i = posted_json.begin(); i != posted_json.end(); i++) {
+        if(config_file_json[i.key()] != i.value() && i.value() != NULL){
+            config_file_json[i.key()] = i.value();
+        }
+    }
+    file.write_file("websiteConfig.json", config_file_json.dump(4));
 }

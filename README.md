@@ -1,6 +1,7 @@
 # led-strip-server
 ### This is a simple server program for a Raspberry Pi that hosts a web page to select different colors on it.
 ### These colors are then displayed on an RGB led strip.
+### In addition, the server can receive commands over MQTT to control the led strip from Openhab.
 
 ![](demo/led_strip_website.png)
 
@@ -15,7 +16,6 @@ Modes
 Three different modes are currently available.
 * The one color mode allows you to select a simple color.
 * The fade mode can be used to smoothly transition inbetween several selected colors.
-of the LED strip moves.
 * The changing colors mode switches between all selected colors.
 
 ## Download ##
@@ -54,6 +54,15 @@ Restart the Raspberry Pi.
 
 Next type ```crontab -e```.
 In the window that opens, add the line "@reboot /usr/local/bin/led-strip-server".
+
+### Openhab ###
+
+To receive commands from Openhab, the following files must be added or modified in "/etc/openhab2/":
+* create "color.items" in "/etc/openhab2/items"
+* modify "default.sitemap" in "/etc/openhab2/sitemaps"
+* create "color.rules" in "/etc/openhab2/rules"
+
+The mentioned files can be found <a href="https://gist.github.com/mec-kon/e4c0c31d593cc22c0699b9fac8d17851" target="_blank">here</a>
 
 Pull requests
 --------

@@ -123,10 +123,14 @@ void thread_init() {
 
     thread network_thread(&Http::RUN, &http, network_connection_access, network_connection_read,
                           network_connection_write, message, is_configuration_data);
+#ifdef USE_MQTT
     thread mqtt_thread(&Mqtt::connect_mqtt, mqtt);
+#endif
     thread administrative_thread(thread_handler);
     network_thread.join();
+#ifdef USE_MQTT
     mqtt_thread.join();
+#endif
     administrative_thread.join();
 
 }

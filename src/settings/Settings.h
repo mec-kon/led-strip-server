@@ -7,6 +7,8 @@
 #include "../../lib/json.hpp"
 #include "../file_control/File.h"
 
+#define SETTINGS_CPP "settings.cpp : "
+
 #define WEBSITE_CONFIG 1
 #define DEVICE_CONFIG 2
 

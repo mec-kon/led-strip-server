@@ -42,6 +42,10 @@ DeviceSettings::DeviceSettings(string message) : Settings (message){
 
     file.write_file("deviceConfig.json", config_file_json.dump(4));
 
+#ifdef DEBUG_MODE
+    cout << SETTINGS_CPP << "new device settings saved" << endl;
+#endif
+
 }
 
 WebsiteSettings::WebsiteSettings(string message) : Settings (message){
@@ -58,4 +62,8 @@ WebsiteSettings::WebsiteSettings(string message) : Settings (message){
         }
     }
     file.write_file("websiteConfig.json", config_file_json.dump(4));
+
+#ifdef DEBUG_MODE
+    cout << SETTINGS_CPP << "new website settings saved" << endl;
+#endif
 }

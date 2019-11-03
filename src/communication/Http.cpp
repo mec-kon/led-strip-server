@@ -11,15 +11,22 @@
 Http::Http() {
     string config = file.open_file("websiteConfig.json");
     Json json;
+
+#ifdef DEBUG_MODE
+        cout << HTTP_CPP << "constructor method called" << endl;
+#endif
+
     try {
         json = Json::parse(config);
         port = json["port"];
 
     }
     catch (exception &e) {
-        cerr << HTTP << "could not read websiteConfig.json" << endl;
-        cerr << HTTP << "error: " << e.what() << endl;
-        cout << HTTP << "Server created with default port 9999" << endl;
+        cerr << HTTP_CPP << "could not read websiteConfig.json" << endl;
+        cerr << HTTP_CPP << "error: " << e.what() << endl;
+#ifdef DEBUG_MODE
+        cout << HTTP_CPP << "Server created with default port 9999" << endl;
+#endif
         port = 9999;
     }
     server.create_server(port);
@@ -35,7 +42,7 @@ Http::Http() {
  *
  */
 void Http::RUN(sem_t *network_connection_access, sem_t *network_connection_read, sem_t *network_connection_write,
-               string *message) {
+               string *message, uint8_t *is_configuration_data) {
     while (true) {
         string request = server.receive_data();
         string mode = get_request_mode(request);
@@ -48,11 +55,13 @@ void Http::RUN(sem_t *network_connection_access, sem_t *network_connection_read,
             sem_wait(network_connection_write);
             sem_wait(network_connection_access);
 
+            *is_configuration_data = is_configuration_data_http;
 
             *message = data;
-
-            cout << HTTP << "data received in run()" << endl;
-            cout << HTTP << data << endl;
+#ifdef DEBUG_MODE
+            cout << HTTP_CPP << "data received in RUN()" << endl;
+            cout << HTTP_CPP << data << endl;
+#endif
         }
         else {
             new_message = false;
@@ -93,15 +102,24 @@ string Http::handle_request(string request, string mode) {
 
         string message;
         if (filename == "colors.json") {
+            is_configuration_data_http = false;
             message = "color received";
         }
+        else if(filename == "deviceConfig.json") {
+            is_configuration_data_http = DEVICE_CONFIG;
+            message = "deviceConfig received";
+        }
+        else if(filename == "websiteConfig.json") {
+            is_configuration_data_http = WEBSITE_CONFIG;
+            message = "websiteConfig received";
+        }
         else {
-            message = file.write_file(filename, content);
+            message = "The http-post was incorrect!";  //file.write_file(filename, content);
             content = "";
         }
 
         string content_type = "text/plain";
-        response = create_header(message.length(), content_type, "HTTP/1.1 200 OK") + message;
+        response = create_header(static_cast<int>(message.length()), content_type, "HTTP/1.1 200 OK") + message;
 
     }
     else if (mode == "GET") {
@@ -112,11 +130,11 @@ string Http::handle_request(string request, string mode) {
 
             content_type = get_content_type(file_ending);
 
-            response = create_header(message.length(), content_type, "HTTP/1.1 200 OK") + message;
+            response = create_header(static_cast<int>(message.length()), content_type, "HTTP/1.1 200 OK") + message;
 
         }
         else {
-            response = create_header(message.length(), content_type, "HTTP/1.1 404 NOT Found") + message;
+            response = create_header(static_cast<int>(message.length()), content_type, "HTTP/1.1 404 NOT Found") + message;
         }
     }
     else if (mode == "OPTIONS") {
@@ -168,7 +186,7 @@ string Http::create_cors_header(string cors_ip_address) {
 string Http::get_content(string request, int content_length) {
 
     string content = request.substr(request.find("\r\n\r\n") + 4);
-    content = content.substr(0, content_length);
+    content = content.substr(0, static_cast<unsigned long>(content_length));
 
     return content;
 }

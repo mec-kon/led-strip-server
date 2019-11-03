@@ -6,6 +6,16 @@
  *
  * This file contains all parameters that can be configured
  */
+#define MQTT_CLIENT_ID "led-strip-server"
+#define MQTT_CLIENT "client-name"
+#define MQTT_CLIENT_PASSWORD "passw0rd"
+#define MQTT_PUBLISH_TOPIC "home/ledstripserver"
+#define MQTT_SUBSCRIPTION_TOPIC "home/ledstripserver"
+
+#define MQTT_ADDRESS "127.0.0.1"
+#define MQTT_PORT 1883
+
+
 #define STATIC_PATH "../static/src/"
 #define INSTALLED_STATIC_PATH "/.led-strip-server/src/"
 #define CONFIG_PATH "../config/"
@@ -16,9 +26,9 @@
 #define CREATION_ERROR_MESSAGE "error! could not create socket"
 
 
-#define GPIO_RED 3
-#define GPIO_GREEN 2
-#define GPIO_BLUE 4
+#define GPIO_RED 2
+#define GPIO_GREEN 0
+#define GPIO_BLUE 3
 
 #define ARRAY_SIZE 6
 

@@ -7,6 +7,8 @@
 #include <unistd.h>
 #include "../defines.h"
 
+#define FILE_CPP "file.cpp : "
+
 using namespace std;
 
 /**

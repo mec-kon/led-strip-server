@@ -12,7 +12,7 @@
 void Server::create_server(int port) {
     struct sockaddr_in my_addr;
     my_addr.sin_family = AF_INET; //internet ip protocol v4
-    my_addr.sin_port = htons(port); //PORT
+    my_addr.sin_port = htons(static_cast<unsigned short>(port)); //PORT
     my_addr.sin_addr.s_addr = INADDR_ANY; //network byte order
 
     //create socket

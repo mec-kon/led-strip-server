@@ -6,6 +6,11 @@ File::File() {
     string working_directory = get_working_path();
     string base_name = working_directory.substr(working_directory.find_last_of('/'), working_directory.size());
 
+#ifdef DEBUG_MODE
+    cout << FILE_CPP << "working directory: " << working_directory << endl;
+    cout << FILE_CPP << "base name: " << base_name << endl;
+#endif
+
     is_installed = base_name != "/cmake-build-debug" && base_name != "/build";
 }
 
@@ -116,7 +121,7 @@ string File::open_file(string filename) {
             file_path = HOME + INSTALLED_CONFIG_PATH;
         }
         else {
-            file_path = HOME +INSTALLED_STATIC_PATH;
+            file_path = HOME + INSTALLED_STATIC_PATH;
         }
     }
     else {
@@ -140,6 +145,10 @@ string File::open_file(string filename) {
         return data;
     }
     else {
+#ifdef DEBUG_MODE
+        cout << FILE_CPP << "file does not exist" << endl;
+#endif
+
         if(filename == "websiteConfig.json") {
             return "{\"port\":9999}";
         }

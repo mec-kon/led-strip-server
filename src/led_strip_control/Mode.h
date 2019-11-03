@@ -4,7 +4,7 @@
 #include "Data.h"
 #include "../gpio_control/Gpio.h"
 
-#define MODE "mode.cpp : "
+#define MODE_CPP "mode.cpp : "
 
 /**
  * @class mode
